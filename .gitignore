@@ -39,6 +39,7 @@ coverage
 
 # Kiro - local development files
 .kiro/
+.kiro/*
 
 # Trello - project management files
 trello-import.csv
