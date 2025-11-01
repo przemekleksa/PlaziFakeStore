@@ -1,43 +1,129 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { AuthProvider } from '@/contexts/AuthContext';
+import AuthGuard from '@/components/layout/AuthGuard';
+
+// Lazy load pages for code splitting
+const HomePage = React.lazy(() => import('@/pages/HomePage'));
+
+const LoginPage = React.lazy(() => import('@/pages/LoginPage'));
+const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'));
+const ProductsPage = React.lazy(() => import('@/pages/ProductsPage'));
+const CreateProductPage = React.lazy(() => import('@/pages/CreateProductPage'));
+const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetailPage'));
+const EditProductPage = React.lazy(() => import('@/pages/EditProductPage'));
+const CategoriesPage = React.lazy(() => import('@/pages/CategoriesPage'));
+const CategoryProductsPage = React.lazy(() => import('@/pages/CategoryProductsPage'));
+const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
+
+// Create QueryClient for TanStack Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 10 * 1000, // 10 seconds cache
+      retry: 2,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+// Loading component for Suspense
+const LoadingSpinner = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    <span className="ml-3 text-gray-600 dark:text-gray-400">Loading...</span>
+  </div>
+);
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8">
-        <header className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Platzi Fake Store
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            React 18 + TypeScript + Vite + Tailwind CSS
-          </p>
-        </header>
-        
-        <main className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              Project Setup Complete! 🎉
-            </h2>
-            <div className="space-y-3 text-gray-700 dark:text-gray-300">
-              <p>✅ React 18 with TypeScript</p>
-              <p>✅ Vite build tool</p>
-              <p>✅ Tailwind CSS with dark mode</p>
-              <p>✅ ESLint + Prettier configuration</p>
-              <p>✅ Project structure ready</p>
-            </div>
-            
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p className="text-blue-800 dark:text-blue-200 font-medium">
-                Next steps: Install dependencies and start development server
-              </p>
-              <code className="block mt-2 text-sm text-blue-700 dark:text-blue-300">
-                npm install && npm run dev
-              </code>
-            </div>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<ProductsPage />} />
+                <Route path="/login" element={<LoginPage />} />
+
+                {/* Protected routes - Dashboard */}
+                <Route
+                  path="/dashboard"
+                  element={
+                    <AuthGuard>
+                      <DashboardPage />
+                    </AuthGuard>
+                  }
+                />
+
+                <Route
+                  path="/dashboard/products"
+                  element={
+                    <AuthGuard>
+                      <ProductsPage />
+                    </AuthGuard>
+                  }
+                />
+
+                <Route
+                  path="/dashboard/products/new"
+                  element={
+                    <AuthGuard>
+                      <CreateProductPage />
+                    </AuthGuard>
+                  }
+                />
+
+                <Route
+                  path="/dashboard/products/:id"
+                  element={
+                    <AuthGuard>
+                      <ProductDetailPage />
+                    </AuthGuard>
+                  }
+                />
+
+                <Route
+                  path="/dashboard/products/:id/edit"
+                  element={
+                    <AuthGuard>
+                      <EditProductPage />
+                    </AuthGuard>
+                  }
+                />
+
+                <Route
+                  path="/categories"
+                  element={
+                    <AuthGuard>
+                      <CategoriesPage />
+                    </AuthGuard>
+                  }
+                />
+
+                <Route
+                  path="/categories/:slug"
+                  element={
+                    <AuthGuard>
+                      <CategoryProductsPage />
+                    </AuthGuard>
+                  }
+                />
+
+                {/* 404 route */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
           </div>
-        </main>
-      </div>
-    </div>
+        </Router>
+      </AuthProvider>
+
+      {/* React Query DevTools (only in development) */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 
