@@ -10,7 +10,7 @@
   - Create basic folder structure (components, pages, hooks, services, types, utils)
   - _Requirements: 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7_
 
-- [ ] 2. Create TypeScript type definitions and API client
+- [x] 2. Create TypeScript type definitions and API client
   - Define Product, Category, User, and Authentication interfaces in types/
   - Create ProductFilters interface with all filter parameters (title, price_min, price_max, categoryId, limit, offset)
   - Set up Axios client with base URL (https://api.escuelajs.co/api/v1)
