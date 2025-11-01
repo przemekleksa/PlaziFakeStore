@@ -37,8 +37,9 @@ coverage
 # Misc
 *.tsbuildinfo
 
-# Kiro
-.kiro/*
+# Kiro - local development files
+.kiro/
 
-# Trelo
+# Trello - project management files
 trello-import.csv
+trello-export-*.csv
