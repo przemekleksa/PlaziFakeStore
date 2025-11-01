@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface LoginFormData {
@@ -15,6 +16,7 @@ interface FormErrors {
 
 const LoginPage = () => {
   const { login, isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
   
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -24,8 +26,10 @@ const LoginPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // If already authenticated - redirect to intended page or homepage
+  const from = (location.state as any)?.from?.pathname || '/';
   if (isAuthenticated) {
-    return null;
+    return <Navigate to={from} replace />;
   }
 
   const validateForm = (): boolean => {
