@@ -14,12 +14,17 @@ export const productsService = {
     // Add filter parameters
     if (filters.title) params.append('title', filters.title);
     if (filters.price) params.append('price', filters.price.toString());
-    if (filters.price_min) params.append('price_min', filters.price_min.toString());
-    if (filters.price_max) params.append('price_max', filters.price_max.toString());
-    if (filters.categoryId) params.append('categoryId', filters.categoryId.toString());
-    if (filters.categorySlug) params.append('categorySlug', filters.categorySlug);
+    if (filters.price_min !== undefined)
+      params.append('price_min', filters.price_min.toString());
+    if (filters.price_max !== undefined)
+      params.append('price_max', filters.price_max.toString());
+    if (filters.categoryId)
+      params.append('categoryId', filters.categoryId.toString());
+    if (filters.categorySlug)
+      params.append('categorySlug', filters.categorySlug);
     if (filters.limit) params.append('limit', filters.limit.toString());
-    if (filters.offset) params.append('offset', filters.offset.toString());
+    if (filters.offset !== undefined)
+      params.append('offset', filters.offset.toString());
 
     const queryString = params.toString();
     const url = queryString ? `/products?${queryString}` : '/products';
@@ -28,7 +33,7 @@ export const productsService = {
   },
 
   // Get single product by ID
-  getProduct: async (id: number): Promise<Product> => {
+  getProduct: async (id: string): Promise<Product> => {
     return api.get<Product>(`/products/${id}`);
   },
 
@@ -41,12 +46,17 @@ export const productsService = {
   },
 
   // Create new product
-  createProduct: async (productData: CreateProductRequest): Promise<Product> => {
+  createProduct: async (
+    productData: CreateProductRequest
+  ): Promise<Product> => {
     return api.post<Product>('/products', productData);
   },
 
   // Update existing product
-  updateProduct: async (id: number, productData: UpdateProductRequest): Promise<Product> => {
+  updateProduct: async (
+    id: number,
+    productData: UpdateProductRequest
+  ): Promise<Product> => {
     return api.put<Product>(`/products/${id}`, productData);
   },
 
@@ -65,7 +75,10 @@ export const productsService = {
   },
 
   // Get products by category
-  getProductsByCategory: async (categoryId: number, limit?: number): Promise<Product[]> => {
+  getProductsByCategory: async (
+    categoryId: number,
+    limit?: number
+  ): Promise<Product[]> => {
     return productsService.getProducts({
       categoryId,
       limit,
