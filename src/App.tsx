@@ -15,7 +15,9 @@ const CreateProductPage = React.lazy(() => import('@/pages/CreateProductPage'));
 const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetailPage'));
 const EditProductPage = React.lazy(() => import('@/pages/EditProductPage'));
 const CategoriesPage = React.lazy(() => import('@/pages/CategoriesPage'));
-const CategoryProductsPage = React.lazy(() => import('@/pages/CategoryProductsPage'));
+const CategoryProductsPage = React.lazy(
+  () => import('@/pages/CategoryProductsPage')
+);
 const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
 
 // Create QueryClient for TanStack Query
@@ -48,6 +50,8 @@ function App() {
                 {/* Public routes */}
                 <Route path="/" element={<ProductsPage />} />
                 <Route path="/login" element={<LoginPage />} />
+
+                <Route path="/product/:id" element={<ProductDetailPage />} />
 
                 {/* Protected routes - Dashboard */}
                 <Route
