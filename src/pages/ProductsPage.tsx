@@ -6,26 +6,48 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import ProductCard from '@/components/product/ProductCard';
 import useDebounce from '@/hooks/useDebounce';
 import { useCategories } from '@/hooks/useCategories';
+import { useUrlParams } from '@/hooks/useUrlParams';
 
 ProductCard.displayName = 'ProductCard';
 
+interface ProductsPageParams {
+  sortBy: string;
+  category: string;
+  priceMin: string;
+  priceMax: string;
+  title: string;
+  limit: number;
+  offset: number;
+}
+
 const ProductsPage = () => {
   const { user, logout, isAuthenticated } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [priceFilter, setPriceFilter] = useState({
-    priceMin: '',
-    priceMax: '',
+
+  // URL params management
+  const {
+    params: urlParams,
+    updateParams,
+    isInitialized,
+  } = useUrlParams<ProductsPageParams>({
+    defaultValues: {
+      sortBy: '',
+      category: '',
+      priceMin: '',
+      priceMax: '',
+      title: '',
+      limit: 12,
+      offset: 0,
+    },
   });
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [sortBy, setSortBy] = useState('');
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const debouncedSearch = useDebounce(searchTerm, 300, 3);
-  const debouncedPriceMin = useDebounce(priceFilter.priceMin, 500, 0);
-  const debouncedPriceMax = useDebounce(priceFilter.priceMax, 500, 0);
+  const debouncedSearch = useDebounce(urlParams.title, 300, 3);
+  const debouncedPriceMin = useDebounce(urlParams.priceMin, 500, 0);
+  const debouncedPriceMax = useDebounce(urlParams.priceMax, 500, 0);
 
-  const [pagination, setPagination] = useState({ limit: 12, offset: 0 });
+  const useSorting = urlParams.sortBy !== '';
 
   const filters = useMemo(
     () => ({
@@ -42,17 +64,23 @@ const ProductsPage = () => {
             ? Number(debouncedPriceMax)
             : 999999
           : undefined,
-      categoryId: selectedCategory ? Number(selectedCategory) : undefined,
+      categoryId: urlParams.category ? Number(urlParams.category) : undefined,
 
-      limit: pagination.limit,
-      offset: pagination.offset,
+      ...(useSorting
+        ? {}
+        : {
+            limit: urlParams.limit,
+            offset: urlParams.offset,
+          }),
     }),
     [
       debouncedSearch,
       debouncedPriceMax,
       debouncedPriceMin,
-      selectedCategory,
-      pagination,
+      urlParams.category,
+      urlParams.limit,
+      urlParams.offset,
+      useSorting,
     ]
   );
 
@@ -65,61 +93,91 @@ const ProductsPage = () => {
   const { data: categories } = useCategories();
 
   const nextPage = () => {
-    setPagination(prev => ({
-      ...prev,
-      offset: prev.offset + prev.limit,
-    }));
+    updateParams({
+      offset: urlParams.offset + urlParams.limit,
+    });
   };
 
   const prevPage = () => {
-    setPagination(prev => ({
-      ...prev,
-      offset: Math.max(0, prev.offset - prev.limit),
-    }));
+    updateParams({
+      offset: Math.max(0, urlParams.offset - urlParams.limit),
+    });
   };
 
-  const currentPage = Math.floor(pagination.offset / pagination.limit) + 1;
-  const totalPages = Math.ceil((allProducts?.length || 0) / pagination.limit);
+  const totalProducts = useSorting
+    ? products?.length || 0
+    : allProducts?.length || 0;
 
+  const totalPages =
+    totalProducts > 0 ? Math.ceil(totalProducts / urlParams.limit) : 0;
+
+  const currentPage =
+    totalProducts > 0 ? Math.floor(urlParams.offset / urlParams.limit) + 1 : 0;
+
+  const isLastPage = useSorting
+    ? urlParams.offset + urlParams.limit >= totalProducts
+    : products && products.length < urlParams.limit;
+
+  const [previousSortBy, setPreviousSortBy] = useState(urlParams.sortBy);
+
+  // Reset offset when sort changes (but not on initial load)
   useEffect(() => {
-    console.log(pagination, currentPage, totalPages);
-  }, [pagination]);
-
-  // There is an issue here an it is connected to API architecture.
-  // If we want to use pagination (limit & offset) from API then sorting on clients side works only for displayed products as described in task requirements:
-  // * Use the official filter & pagination params when listing products:
-  // `title`, `price`, `price_min`, `price_max`, `categoryId`/`categorySlug`, `limit`, `offset`.
+    if (isInitialized && urlParams.sortBy !== previousSortBy) {
+      updateParams({ offset: 0 });
+      setPreviousSortBy(urlParams.sortBy);
+    }
+  }, [urlParams.sortBy, isInitialized, previousSortBy, updateParams]);
 
   const sortedProducts = useMemo(() => {
     if (!products) return undefined;
 
     const productsCopy = [...products];
 
-    switch (sortBy) {
+    if (!useSorting) {
+      return productsCopy;
+    }
+    let sorted;
+    switch (urlParams.sortBy) {
       case 'price-high':
-        return productsCopy.sort((a, b) => b.price - a.price);
+        sorted = productsCopy.sort((a, b) => b.price - a.price);
+        break;
       case 'price-low':
-        return productsCopy.sort((a, b) => a.price - b.price);
+        sorted = productsCopy.sort((a, b) => a.price - b.price);
+        break;
       case 'name-az':
-        return productsCopy.sort((a, b) => a.title.localeCompare(b.title));
+        sorted = productsCopy.sort((a, b) => a.title.localeCompare(b.title));
+        break;
       case 'name-za':
-        return productsCopy.sort((a, b) => b.title.localeCompare(a.title));
+        sorted = productsCopy.sort((a, b) => b.title.localeCompare(a.title));
+        break;
       case 'newest':
-        return productsCopy.sort((a, b) => {
+        sorted = productsCopy.sort((a, b) => {
           const dateA = new Date(a.creationAt);
           const dateB = new Date(b.creationAt);
           return dateB.getTime() - dateA.getTime();
         });
+        break;
       case 'oldest':
-        return productsCopy.sort((a, b) => {
+        sorted = productsCopy.sort((a, b) => {
           const dateA = new Date(a.creationAt);
           const dateB = new Date(b.creationAt);
           return dateA.getTime() - dateB.getTime();
         });
+        break;
       default:
-        return productsCopy;
+        sorted = productsCopy;
     }
-  }, [products, sortBy]);
+
+    const start = urlParams.offset;
+    const end = start + urlParams.limit;
+    return sorted.slice(start, end);
+  }, [
+    products,
+    urlParams.sortBy,
+    useSorting,
+    urlParams.offset,
+    urlParams.limit,
+  ]);
 
   const remove = useDeleteProduct();
 
@@ -132,9 +190,12 @@ const ProductsPage = () => {
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value);
+      updateParams({
+        title: e.target.value,
+        offset: 0, // Reset pagination when searching
+      });
     },
-    []
+    [updateParams]
   );
 
   return (
@@ -254,7 +315,7 @@ const ProductsPage = () => {
             <input
               type="text"
               placeholder="Search products..."
-              value={searchTerm}
+              value={urlParams.title}
               onChange={handleSearchChange}
               className="input-field"
             />
@@ -303,7 +364,7 @@ const ProductsPage = () => {
 
           {/* Filters Content */}
           <div
-            className={`${filtersOpen ? 'block' : 'hidden'} lg:block bg-white dark:bg-gray-800 rounded-lg p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-sm`}
+            className={`${filtersOpen ? 'block' : 'hidden'} lg:block bg-white dark:bg-gray-800 rounded-lg p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-md`}
           >
             <div className="flex flex-wrap items-end gap-6">
               {/* Price Filter */}
@@ -316,11 +377,11 @@ const ProductsPage = () => {
                     type="number"
                     placeholder="Min"
                     min="0"
-                    value={priceFilter.priceMin}
+                    value={urlParams.priceMin}
                     onChange={e =>
-                      setPriceFilter({
-                        ...priceFilter,
+                      updateParams({
                         priceMin: e.target.value,
+                        offset: 0, // Reset pagination when filtering
                       })
                     }
                     onKeyDown={e => {
@@ -337,11 +398,11 @@ const ProductsPage = () => {
                     type="number"
                     placeholder="Max"
                     min="0"
-                    value={priceFilter.priceMax}
+                    value={urlParams.priceMax}
                     onChange={e =>
-                      setPriceFilter({
-                        ...priceFilter,
+                      updateParams({
                         priceMax: e.target.value,
+                        offset: 0, // Reset pagination when filtering
                       })
                     }
                     onKeyDown={e => {
@@ -351,13 +412,13 @@ const ProductsPage = () => {
                     }}
                     className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
                   />
-                  {(priceFilter.priceMin || priceFilter.priceMax) && (
+                  {(urlParams.priceMin || urlParams.priceMax) && (
                     <button
                       onClick={() =>
-                        setPriceFilter({
-                          ...priceFilter,
+                        updateParams({
                           priceMin: '',
                           priceMax: '',
+                          offset: 0,
                         })
                       }
                       className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2"
@@ -375,8 +436,13 @@ const ProductsPage = () => {
                 </label>
                 <div className="flex items-center gap-2">
                   <select
-                    value={selectedCategory}
-                    onChange={e => setSelectedCategory(e.target.value)}
+                    value={urlParams.category}
+                    onChange={e =>
+                      updateParams({
+                        category: e.target.value,
+                        offset: 0, // Reset pagination when filtering
+                      })
+                    }
                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
                   >
                     <option value="">All Categories</option>
@@ -386,9 +452,14 @@ const ProductsPage = () => {
                       </option>
                     ))}
                   </select>
-                  {selectedCategory && (
+                  {urlParams.category && (
                     <button
-                      onClick={() => setSelectedCategory('')}
+                      onClick={() =>
+                        updateParams({
+                          category: '',
+                          offset: 0,
+                        })
+                      }
                       className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2"
                     >
                       Clear
@@ -403,8 +474,14 @@ const ProductsPage = () => {
                   Sort by
                 </label>
                 <select
+                  value={urlParams.sortBy}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
-                  onChange={e => setSortBy(e.target.value)}
+                  onChange={e =>
+                    updateParams({
+                      sortBy: e.target.value,
+                      offset: 0, // Reset pagination when sorting changes
+                    })
+                  }
                 >
                   <option value="">Default</option>
                   <option value="price-high">Price: High to Low</option>
@@ -455,39 +532,32 @@ const ProductsPage = () => {
             </div>
           )}
 
-          <div className="flex justify-between items-center mt-8 ">
-            <span className="text-sm text-gray-700">
-              Page {currentPage} of {totalPages}
-            </span>
-            <div className="flex gap-2">
-              <button
-                disabled={currentPage === 1}
-                onClick={prevPage}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <button
-                disabled={currentPage === totalPages}
-                onClick={nextPage}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                Next
-              </button>
+          {/* Pagination - only show when there are products or multiple pages */}
+          {!isLoading && !error && totalProducts > 0 && (
+            <div className="flex justify-between items-center mt-8">
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                Page {currentPage} of {totalPages}
+              </span>
+              <div className="flex gap-2">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={prevPage}
+                  className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Previous
+                </button>
+                <button
+                  disabled={
+                    useSorting ? isLastPage : currentPage === totalPages
+                  }
+                  onClick={nextPage}
+                  className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div className="mt-12 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <h3 className="text-lg font-medium text-blue-800 dark:text-blue-200 mb-2">
-              Next Steps:
-            </h3>
-            <div className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-              <p>• Replace placeholder cards with real product data from API</p>
-              <p>• Add search and filtering functionality</p>
-              <p>• Implement pagination</p>
-              <p>• Add shopping cart functionality</p>
-            </div>
-          </div>
+          )}
         </main>
       </div>
     </div>
