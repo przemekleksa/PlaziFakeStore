@@ -9,7 +9,6 @@ const ProductDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
 
   const { data: product, isLoading, isError } = useProduct(id);
-  console.log(product);
 
   if (isLoading) {
     return (

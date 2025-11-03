@@ -15,7 +15,7 @@ const useProducts = (filters: ProductFilters) => {
   });
 };
 
-const useProduct = (id: number) => {
+const useProduct = (id: string) => {
   return useQuery({
     queryKey: ['product', id],
     queryFn: () => productsService.getProduct(id),
