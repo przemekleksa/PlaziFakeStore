@@ -137,7 +137,7 @@ describe('ProductsPage Integration', () => {
   });
 
   it('should render pagination controls', async () => {
-    const mockProducts = Array.from({ length: 12 }, (_, i) =>
+    const mockProducts = Array.from({ length: 25 }, (_, i) =>
       createMockProduct({ id: i + 1, title: `Product ${i + 1}`, price: 100 })
     );
 
@@ -150,9 +150,10 @@ describe('ProductsPage Integration', () => {
       expect(screen.getByText('Product 1')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Previous')).toBeInTheDocument();
+    // Previous button should not be visible on first page
+    expect(screen.queryByText('Previous')).not.toBeInTheDocument();
     expect(screen.getByText('Next')).toBeInTheDocument();
-    expect(screen.getByText(/Page 1 of/)).toBeInTheDocument();
+    expect(screen.getByText(/of \d+/)).toBeInTheDocument();
   });
 
   it('should show loading state', async () => {

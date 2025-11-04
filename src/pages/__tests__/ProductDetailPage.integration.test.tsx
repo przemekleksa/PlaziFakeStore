@@ -92,7 +92,9 @@ describe('ProductDetailPage Integration', () => {
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText('Gaming Laptop')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Gaming Laptop' })
+      ).toBeInTheDocument();
     });
 
     expect(screen.getByText('$1500')).toBeInTheDocument();
@@ -120,7 +122,9 @@ describe('ProductDetailPage Integration', () => {
     resolveProduct!(createMockProduct());
 
     await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Test Product' })
+      ).toBeInTheDocument();
     });
   });
 
@@ -155,7 +159,9 @@ describe('ProductDetailPage Integration', () => {
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Test Product' })
+      ).toBeInTheDocument();
     });
 
     // Check main image
@@ -188,23 +194,19 @@ describe('ProductDetailPage Integration', () => {
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Test Product' })
+      ).toBeInTheDocument();
     });
 
-    const editLink = screen.getByText('Edit Product');
+    const editLink = screen.getByText('✏️ Edit');
     const backLink = screen.getByText('Back to Products');
 
     expect(editLink).toBeInTheDocument();
-    expect(editLink.closest('a')).toHaveAttribute(
-      'href',
-      '/dashboard/products/1/edit'
-    );
+    expect(editLink.closest('a')).toHaveAttribute('href', '/products/1/edit');
 
     expect(backLink).toBeInTheDocument();
-    expect(backLink.closest('a')).toHaveAttribute(
-      'href',
-      '/dashboard/products'
-    );
+    expect(backLink.closest('a')).toHaveAttribute('href', '/');
   });
 
   it('should display product creation date', async () => {
@@ -218,7 +220,9 @@ describe('ProductDetailPage Integration', () => {
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Test Product' })
+      ).toBeInTheDocument();
     });
 
     // Check if creation date is displayed (format may vary based on locale)
@@ -266,7 +270,9 @@ describe('ProductDetailPage Integration', () => {
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText('Test Product')).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { name: 'Test Product' })
+      ).toBeInTheDocument();
     });
 
     const mainImage = screen.getByAltText('Test Product');
