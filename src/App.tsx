@@ -2,11 +2,10 @@ import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from '@/contexts/AuthContext';
 import AuthGuard from '@/components/layout/AuthGuard';
-
-// Lazy load pages for code splitting
-const HomePage = React.lazy(() => import('@/pages/HomePage'));
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginPage = React.lazy(() => import('@/pages/LoginPage'));
 const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'));
@@ -20,7 +19,6 @@ const CategoryProductsPage = React.lazy(
 );
 const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
 
-// Create QueryClient for TanStack Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,7 +29,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Loading component for Suspense
 const LoadingSpinner = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
@@ -48,12 +45,13 @@ function App() {
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
                 {/* Public routes */}
-                <Route path="/" element={<ProductsPage />} />
                 <Route path="/login" element={<LoginPage />} />
 
-                <Route path="/product/:id" element={<ProductDetailPage />} />
+                {/* Main routes - work for both public and authenticated users */}
+                <Route path="/" element={<ProductsPage />} />
+                <Route path="/products/:id" element={<ProductDetailPage />} />
 
-                {/* Protected routes - Dashboard */}
+                {/* Protected routes - require authentication */}
                 <Route
                   path="/dashboard"
                   element={
@@ -64,16 +62,7 @@ function App() {
                 />
 
                 <Route
-                  path="/dashboard/products"
-                  element={
-                    <AuthGuard>
-                      <ProductsPage />
-                    </AuthGuard>
-                  }
-                />
-
-                <Route
-                  path="/dashboard/products/new"
+                  path="/products/new"
                   element={
                     <AuthGuard>
                       <CreateProductPage />
@@ -82,16 +71,7 @@ function App() {
                 />
 
                 <Route
-                  path="/dashboard/products/:id"
-                  element={
-                    <AuthGuard>
-                      <ProductDetailPage />
-                    </AuthGuard>
-                  }
-                />
-
-                <Route
-                  path="/dashboard/products/:id/edit"
+                  path="/products/:id/edit"
                   element={
                     <AuthGuard>
                       <EditProductPage />
@@ -99,14 +79,7 @@ function App() {
                   }
                 />
 
-                <Route
-                  path="/categories"
-                  element={
-                    <AuthGuard>
-                      <CategoriesPage />
-                    </AuthGuard>
-                  }
-                />
+                <Route path="/categories" element={<CategoriesPage />} />
 
                 <Route
                   path="/categories/:slug"
@@ -125,8 +98,20 @@ function App() {
         </Router>
       </AuthProvider>
 
-      {/* React Query DevTools (only in development) */}
       <ReactQueryDevtools initialIsOpen={false} />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </QueryClientProvider>
   );
 }

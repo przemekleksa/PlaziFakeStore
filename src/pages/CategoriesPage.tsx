@@ -1,27 +1,29 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCategories } from '@/hooks/useCategories';
+import PageHeader from '@/components/layout/PageHeader';
+import CategoriesGrid from '@/components/categories/CategoriesGrid';
 
 const CategoriesPage = () => {
+  const { user, logout, isAuthenticated } = useAuth();
+  const { data: categories, isError, isLoading } = useCategories();
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Categories
-          </h1>
-          <Link
-            to="/dashboard"
-            className="btn-secondary"
-          >
-            Back to Dashboard
-          </Link>
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <p className="text-gray-600 dark:text-gray-400">
-            Categories list will be displayed here.
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-8">
+        <PageHeader
+          isAuthenticated={isAuthenticated}
+          user={user}
+          onLogout={logout}
+        />
+
+        <main className="max-w-6xl mx-auto">
+          <CategoriesGrid
+            categories={categories}
+            isLoading={isLoading}
+            error={isError ? new Error('Failed to load categories') : null}
+            emptyMessage="No categories available."
+          />
+        </main>
       </div>
     </div>
   );
