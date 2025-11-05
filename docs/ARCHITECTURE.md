@@ -20,13 +20,15 @@ The Platzi Fake Store is a modern React application built with TypeScript that p
 
 ### Key Features
 
-- Product browsing with search, filtering, and sorting
-- User authentication and authorization
-- CRUD operations for products (authenticated users)
-- Responsive design with dark mode support
-- Accessibility compliance (WCAG AA)
-- Performance optimizations
-- Comprehensive testing
+- **Product Management**: Browse, search, filter, and sort products
+- **Authentication**: JWT-based user authentication and authorization
+- **CRUD Operations**: Full product management for authenticated users
+- **Responsive Design**: Mobile-first approach with dark mode support
+- **Accessibility**: WCAG AA compliance with comprehensive a11y features
+- **Performance**: Code splitting, lazy loading, and caching optimizations
+- **URL State**: Deep linking and browser history support
+- **Testing**: Comprehensive unit and integration test coverage
+- **Error Handling**: Graceful error boundaries and user feedback
 
 ## Technology Stack
 
@@ -63,7 +65,9 @@ src/
 │   ├── ui/             # Basic UI components (Button, Input, etc.)
 │   ├── forms/          # Form components
 │   ├── layout/         # Layout components (Header, AuthGuard)
-│   ├── product/        # Product-specific components
+│   ├── product/        # Individual product components
+│   ├── products/       # Products listing components
+│   ├── categories/     # Category-related components
 │   └── accessibility/  # Accessibility components
 ├── pages/              # Route components (lazy-loaded)
 ├── hooks/              # Custom React hooks
@@ -71,7 +75,6 @@ src/
 ├── contexts/           # React contexts (Auth, Theme)
 ├── types/              # TypeScript type definitions
 ├── utils/              # Utility functions
-├── lib/                # Third-party library configurations
 └── __tests__/          # Test files and utilities
 ```
 
@@ -82,7 +85,7 @@ Components are organized by feature and complexity:
 - **UI Components**: Reusable, generic components
 - **Feature Components**: Domain-specific components
 - **Page Components**: Route-level components
-- **Layout Components**: Application structure components
+- **Layout Components**: PageHeader, AuthGuard, PageErrorBoundary
 
 ## Design Patterns
 
@@ -163,9 +166,10 @@ export const useProducts = (filters: ProductFilters) => {
 
 ### Code Splitting
 
-- **Route-based**: Each page is a separate chunk
-- **Component-based**: Large components split dynamically
-- **Vendor splitting**: Third-party libraries in separate chunks
+- **Route-based**: Each page component uses React.lazy for dynamic imports
+- **Component-based**: Heavy components (ProductsFilters, ConfirmModal) are lazy-loaded
+- **Vendor splitting**: Automatic vendor chunk separation by Vite
+- **Suspense boundaries**: Loading states for all lazy-loaded components
 
 ### Caching Strategy
 
@@ -190,7 +194,7 @@ export const useProducts = (filters: ProductFilters) => {
 ### Authentication
 
 - **JWT tokens**: Secure token-based authentication
-- **Token storage**: localStorage with expiration
+- **Token storage**: localStorage (JWT tokens have built-in expiration)
 - **Route protection**: AuthGuard for protected routes
 
 ### API Security
@@ -198,6 +202,13 @@ export const useProducts = (filters: ProductFilters) => {
 - **HTTPS only**: All API calls over secure connection
 - **CORS handling**: Proper cross-origin configuration
 - **Input validation**: Client and server-side validation
+
+### API Limitations
+
+- **No partial updates**: The Platzi Fake Store API doesn't support PATCH operations for partial product updates
+- **Full object replacement**: PUT operations require sending the complete product object
+- **Rate limiting**: API has usage limits that may affect high-frequency operations
+- **Mock data**: Some operations may not persist as expected due to the demo nature of the API
 
 ### XSS Prevention
 
@@ -276,20 +287,33 @@ export const useProducts = (filters: ProductFilters) => {
 
 ## Future Considerations
 
+### Development Tools
+
+- **Biome**: Replace ESLint + Prettier with faster, unified tooling
+- **Query Key Management**: Centralized query key factory for better cache management
+- **State Management**: Consider Zustand or Valtio for complex client state
+
 ### Scalability
 
 - **Micro-frontends**: Module federation for large teams
-- **State management**: Redux Toolkit for complex state
-- **Component library**: Shared design system
+- **Component library**: Shared design system with Storybook
 
 ### Performance
 
-- **Service workers**: Offline functionality
-- **Virtual scrolling**: Large list optimization
-- **Image CDN**: Optimized image delivery
+- **Service workers**: Offline functionality and background sync
+- **Virtual scrolling**: Optimize large product lists (1000+ items)
+- **Image CDN**: Cloudinary or similar for automatic optimization
+- **Bundle analysis**: Automated bundle size monitoring in CI
 
 ### Features
 
-- **Internationalization**: Multi-language support
-- **Real-time updates**: WebSocket integration
-- **Progressive Web App**: Mobile app-like experience
+- **Internationalization**: React-i18next for multi-language support
+- **Real-time updates**: WebSocket integration for live data
+- **Progressive Web App**: Service workers, app manifest, offline support
+- **Advanced search**: Elasticsearch or Algolia integration
+
+### Code Quality
+
+- **Query Key Factory**: Centralized management of TanStack Query keys
+- **Error Tracking**: Sentry integration for production error monitoring
+- **Performance Monitoring**: Web Vitals tracking and alerting
