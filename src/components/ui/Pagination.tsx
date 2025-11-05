@@ -38,7 +38,8 @@ const Pagination = ({
         {showPrevious && (
           <button
             onClick={() => onPageChange(currentPage - 1)}
-            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            aria-label={`Go to page ${currentPage - 1}`}
+            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           >
             Previous
           </button>
@@ -49,7 +50,9 @@ const Pagination = ({
           <button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded transition-colors ${
+            aria-label={`Go to page ${page}`}
+            aria-current={page === currentPage ? 'page' : undefined}
+            className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
               page === currentPage
                 ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600'
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
@@ -70,7 +73,8 @@ const Pagination = ({
         {showNext && (
           <button
             onClick={() => onPageChange(currentPage + 1)}
-            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            aria-label={`Go to page ${currentPage + 1}`}
+            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           >
             Next
           </button>

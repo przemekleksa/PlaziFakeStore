@@ -51,7 +51,7 @@ const CategoriesPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
-        <main className="max-w-6xl mx-auto">
+        <main id="main-content" className="max-w-6xl mx-auto" tabIndex={-1}>
           <CategoriesGrid
             categories={categories}
             isLoading={isLoading}

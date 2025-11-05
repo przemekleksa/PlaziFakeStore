@@ -65,15 +65,15 @@ const EditProductPage = () => {
       <div className="max-w-2xl mx-auto">
         <Breadcrumbs items={breadcrumbs} />
 
-        <div className="lg:flex items-center justify-between mb-6 grid gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Edit Product
           </h1>
-          <div className="space-x-3 lg:flex ">
-            <Link to={`/products/${id}`} className="btn-secondary">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <Link to={`/products/${id}`} className="btn-secondary text-center">
               View Product
             </Link>
-            <Link to="/" className="btn-secondary">
+            <Link to="/" className="btn-secondary text-center">
               Back to Products
             </Link>
           </div>

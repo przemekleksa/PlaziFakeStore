@@ -18,7 +18,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
 
   return (
     <>
-      <header className="flex justify-between items-center mb-4 sm:mb-8">
+      <header className="flex justify-between items-center mb-4 ">
         <div className="flex flex-col">
           {/* Logo and Brand Name - Clickable Link to Home */}
           <Link to="/" className="flex items-center mb-1 group">
@@ -96,7 +96,11 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
         <div className="lg:hidden shadow-md self-start mt-2">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+            className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+            aria-label={
+              mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+            }
+            aria-expanded={mobileMenuOpen}
           >
             <svg
               className="w-6 h-6 text-gray-600 dark:text-gray-300"
@@ -117,7 +121,10 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4">
+        <nav
+          className="lg:hidden mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-4"
+          aria-label="Mobile navigation menu"
+        >
           <div className="space-y-3">
             {isAuthenticated && (
               <Link
@@ -190,7 +197,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
               </Link>
             )}
           </div>
-        </div>
+        </nav>
       )}
     </>
   );

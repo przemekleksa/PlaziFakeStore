@@ -6,7 +6,7 @@ import ErrorFallback from '@/components/ui/ErrorFallback';
 interface ProductsGridProps {
   products: Product[] | undefined;
   isAuthenticated: boolean;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, title: string) => void;
   isLoading: boolean;
   error: Error | null;
   emptyMessage?: string;
@@ -51,7 +51,7 @@ const ProductsGrid = ({
           key={product.id}
           product={product}
           isAuthenticated={isAuthenticated}
-          onDelete={onDelete}
+          onDelete={id => onDelete(id, product.title)}
         />
       ))}
     </div>

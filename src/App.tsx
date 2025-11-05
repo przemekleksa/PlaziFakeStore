@@ -7,6 +7,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import AuthGuard from '@/components/layout/AuthGuard';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import PageErrorBoundary from '@/components/ui/PageErrorBoundary';
+import SkipToContent from '@/components/accessibility/SkipToContent';
 import Skeleton from '@/components/ui/Skeleton';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,9 +18,7 @@ const CreateProductPage = React.lazy(() => import('@/pages/CreateProductPage'));
 const ProductDetailPage = React.lazy(() => import('@/pages/ProductDetailPage'));
 const EditProductPage = React.lazy(() => import('@/pages/EditProductPage'));
 const CategoriesPage = React.lazy(() => import('@/pages/CategoriesPage'));
-const CategoryProductsPage = React.lazy(
-  () => import('@/pages/CategoryProductsPage')
-);
+
 const NotFoundPage = React.lazy(() => import('@/pages/NotFoundPage'));
 
 const queryClient = new QueryClient({
@@ -97,6 +96,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <Router>
+            <SkipToContent />
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
               <Suspense fallback={<PageLoadingSkeleton />}>
                 <ErrorBoundary>
@@ -168,17 +168,6 @@ function App() {
                       element={
                         <PageErrorBoundary pageName="categories page">
                           <CategoriesPage />
-                        </PageErrorBoundary>
-                      }
-                    />
-
-                    <Route
-                      path="/categories/:slug"
-                      element={
-                        <PageErrorBoundary pageName="category products page">
-                          <AuthGuard>
-                            <CategoryProductsPage />
-                          </AuthGuard>
                         </PageErrorBoundary>
                       }
                     />

@@ -2,6 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useDeleteProduct, useProducts } from '@/hooks/useProducts';
 import useDebounce from '@/hooks/useDebounce';
 import { useUrlParams } from '@/hooks/useUrlParams';
+import { toast } from 'react-toastify';
 
 export interface ProductsPageParams {
   sortBy: string;
@@ -158,13 +159,54 @@ export const useProductsLogic = () => {
   ]);
 
   const remove = useDeleteProduct();
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    productId: number | null;
+    productTitle: string;
+  }>({
+    isOpen: false,
+    productId: null,
+    productTitle: '',
+  });
 
-  const handleDelete = useCallback(
-    (id: number) => {
-      remove.mutate(id);
-    },
-    [remove]
-  );
+  const showDeleteModal = useCallback((id: number, title: string) => {
+    setDeleteModalState({
+      isOpen: true,
+      productId: id,
+      productTitle: title,
+    });
+  }, []);
+
+  const hideDeleteModal = useCallback(() => {
+    setDeleteModalState({
+      isOpen: false,
+      productId: null,
+      productTitle: '',
+    });
+  }, []);
+
+  const handleConfirmDelete = useCallback(() => {
+    if (deleteModalState.productId) {
+      remove.mutate(deleteModalState.productId, {
+        onSuccess: () => {
+          toast.success(
+            `${deleteModalState.productTitle} deleted successfully!`
+          );
+          hideDeleteModal();
+        },
+        onError: error => {
+          console.error('Failed to delete product:', error);
+          toast.error('Failed to delete product. Please try again.');
+          hideDeleteModal();
+        },
+      });
+    }
+  }, [
+    remove,
+    deleteModalState.productId,
+    deleteModalState.productTitle,
+    hideDeleteModal,
+  ]);
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -225,9 +267,12 @@ export const useProductsLogic = () => {
     isLoading,
     error,
     debouncedSearch,
+    deleteModalState,
 
     // Handlers
-    handleDelete,
+    showDeleteModal,
+    hideDeleteModal,
+    handleConfirmDelete,
     handleSearchChange,
     clearSearch,
     clearAllFilters,

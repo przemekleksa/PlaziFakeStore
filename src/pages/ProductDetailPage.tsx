@@ -5,8 +5,6 @@ import ErrorFallback from '@/components/ui/ErrorFallback';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeleteProduct, useProduct } from '@/hooks/useProducts';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
-import { useScrollShrink } from '../hooks/useScrollShrink';
-import CompactHeader from '@/components/layout/CompactHeader';
 
 import { useCallback, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -20,7 +18,7 @@ const ProductDetailPage = () => {
 
   const [selectedImage, setSelectedImage] = useState(0);
   const { user, logout, isAuthenticated } = useAuth();
-  const isScrolled = useScrollShrink(100);
+
   // Always go back to products page
   const backUrl = '/';
 
@@ -58,20 +56,15 @@ const ProductDetailPage = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Sticky Header for loading state */}
-        <div className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <div className="container mx-auto px-4 py-3">
-            <div className="max-w-4xl mx-auto relative">
-              <CompactHeader
-                isAuthenticated={isAuthenticated}
-                onLogout={logout}
-                user={user}
-              />
-            </div>
-          </div>
+        <div className="container mx-auto px-4 pt-8 pb-4">
+          <PageHeader
+            isAuthenticated={isAuthenticated}
+            user={user}
+            onLogout={logout}
+          />
         </div>
 
-        <div className="container mx-auto px-4 pt-6 pb-8">
+        <div className="container mx-auto px-4 pb-8">
           <div className="max-w-4xl mx-auto">
             <ProductDetailSkeleton />
           </div>
@@ -83,20 +76,15 @@ const ProductDetailPage = () => {
   if (isError || !product) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Sticky Header for error state */}
-        <div className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <div className="container mx-auto px-4 py-3">
-            <div className="max-w-4xl mx-auto relative">
-              <CompactHeader
-                isAuthenticated={isAuthenticated}
-                onLogout={logout}
-                user={user}
-              />
-            </div>
-          </div>
+        <div className="container mx-auto px-4 pt-8 pb-4">
+          <PageHeader
+            isAuthenticated={isAuthenticated}
+            user={user}
+            onLogout={logout}
+          />
         </div>
 
-        <div className="container mx-auto px-4 pt-6 pb-8">
+        <div className="container mx-auto px-4 pb-8">
           <div className="max-w-4xl mx-auto">
             <ErrorFallback
               error={undefined}
@@ -119,45 +107,18 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Normal Header - always takes space */}
-      <div className="container mx-auto px-4 py-8">
-        {!isScrolled && (
-          <PageHeader
-            isAuthenticated={isAuthenticated}
-            user={user}
-            onLogout={logout}
-          />
-        )}
-        {/* Invisible placeholder when scrolled to maintain layout */}
-        {isScrolled && (
-          <div className="invisible">
-            <PageHeader
-              isAuthenticated={isAuthenticated}
-              user={user}
-              onLogout={logout}
-            />
-          </div>
-        )}
+      {/* Header */}
+      <div className="container mx-auto px-4 pt-8 pb-4">
+        <PageHeader
+          isAuthenticated={isAuthenticated}
+          user={user}
+          onLogout={logout}
+        />
       </div>
-
-      {/* Sticky Compact Header - visible when scrolled */}
-      {isScrolled && (
-        <div className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-all duration-300">
-          <div className="container mx-auto px-4 py-3">
-            <div className="max-w-4xl mx-auto relative">
-              <CompactHeader
-                isAuthenticated={isAuthenticated}
-                onLogout={logout}
-                user={user}
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
-        <div className="max-w-4xl mx-auto">
+        <main id="main-content" className="max-w-4xl mx-auto" tabIndex={-1}>
           <Breadcrumbs items={breadcrumbs} />
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
             {/* <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -258,7 +219,7 @@ const ProductDetailPage = () => {
               denyLabel="Cancel"
             />
           )}
-        </div>
+        </main>
       </div>
     </div>
   );

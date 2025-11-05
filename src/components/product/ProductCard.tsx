@@ -26,6 +26,7 @@ const ProductCard = memo(
         {/* Image and title are clickable */}
         <Link
           to={`/products/${product.id}`}
+          aria-label={`View details for ${product.title}`}
           className="block"
           onMouseEnter={handleMouseEnter}
           onFocus={handleFocus}
@@ -64,6 +65,7 @@ const ProductCard = memo(
               <div className="flex space-x-2">
                 <Link
                   to={`/products/${product.id}/edit`}
+                  aria-label={`Edit ${product.title}`}
                   className="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 text-sm"
                   onClick={e => e.stopPropagation()}
                   onMouseEnter={handleMouseEnter}
@@ -73,6 +75,7 @@ const ProductCard = memo(
                 </Link>
                 {onDelete && (
                   <button
+                    aria-label={`Delete ${product.title}`}
                     className="focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 transition-colors duration-200"
                     onClick={e => {
                       e.stopPropagation();
