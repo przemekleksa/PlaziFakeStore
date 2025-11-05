@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ToastContainer } from 'react-toastify';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 import AuthGuard from '@/components/layout/AuthGuard';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
@@ -95,99 +96,101 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <Router>
-            <SkipToContent />
-            <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-              <Suspense fallback={<PageLoadingSkeleton />}>
-                <ErrorBoundary>
-                  <Routes>
-                    {/* Public routes */}
-                    <Route
-                      path="/login"
-                      element={
-                        <PageErrorBoundary pageName="login page">
-                          <LoginPage />
-                        </PageErrorBoundary>
-                      }
-                    />
+        <ThemeProvider>
+          <AuthProvider>
+            <Router>
+              <SkipToContent />
+              <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                <Suspense fallback={<PageLoadingSkeleton />}>
+                  <ErrorBoundary>
+                    <Routes>
+                      {/* Public routes */}
+                      <Route
+                        path="/login"
+                        element={
+                          <PageErrorBoundary pageName="login page">
+                            <LoginPage />
+                          </PageErrorBoundary>
+                        }
+                      />
 
-                    {/* Main routes - work for both public and authenticated users */}
-                    <Route
-                      path="/"
-                      element={
-                        <PageErrorBoundary pageName="products page">
-                          <ProductsPage />
-                        </PageErrorBoundary>
-                      }
-                    />
-                    <Route
-                      path="/products/:id"
-                      element={
-                        <PageErrorBoundary pageName="product detail page">
-                          <ProductDetailPage />
-                        </PageErrorBoundary>
-                      }
-                    />
+                      {/* Main routes - work for both public and authenticated users */}
+                      <Route
+                        path="/"
+                        element={
+                          <PageErrorBoundary pageName="products page">
+                            <ProductsPage />
+                          </PageErrorBoundary>
+                        }
+                      />
+                      <Route
+                        path="/products/:id"
+                        element={
+                          <PageErrorBoundary pageName="product detail page">
+                            <ProductDetailPage />
+                          </PageErrorBoundary>
+                        }
+                      />
 
-                    {/* Protected routes - require authentication */}
-                    <Route
-                      path="/dashboard"
-                      element={
-                        <PageErrorBoundary pageName="dashboard">
-                          <AuthGuard>
-                            <DashboardPage />
-                          </AuthGuard>
-                        </PageErrorBoundary>
-                      }
-                    />
+                      {/* Protected routes - require authentication */}
+                      <Route
+                        path="/dashboard"
+                        element={
+                          <PageErrorBoundary pageName="dashboard">
+                            <AuthGuard>
+                              <DashboardPage />
+                            </AuthGuard>
+                          </PageErrorBoundary>
+                        }
+                      />
 
-                    <Route
-                      path="/products/new"
-                      element={
-                        <PageErrorBoundary pageName="create product page">
-                          <AuthGuard>
-                            <CreateProductPage />
-                          </AuthGuard>
-                        </PageErrorBoundary>
-                      }
-                    />
+                      <Route
+                        path="/products/new"
+                        element={
+                          <PageErrorBoundary pageName="create product page">
+                            <AuthGuard>
+                              <CreateProductPage />
+                            </AuthGuard>
+                          </PageErrorBoundary>
+                        }
+                      />
 
-                    <Route
-                      path="/products/:id/edit"
-                      element={
-                        <PageErrorBoundary pageName="edit product page">
-                          <AuthGuard>
-                            <EditProductPage />
-                          </AuthGuard>
-                        </PageErrorBoundary>
-                      }
-                    />
+                      <Route
+                        path="/products/:id/edit"
+                        element={
+                          <PageErrorBoundary pageName="edit product page">
+                            <AuthGuard>
+                              <EditProductPage />
+                            </AuthGuard>
+                          </PageErrorBoundary>
+                        }
+                      />
 
-                    <Route
-                      path="/categories"
-                      element={
-                        <PageErrorBoundary pageName="categories page">
-                          <CategoriesPage />
-                        </PageErrorBoundary>
-                      }
-                    />
+                      <Route
+                        path="/categories"
+                        element={
+                          <PageErrorBoundary pageName="categories page">
+                            <CategoriesPage />
+                          </PageErrorBoundary>
+                        }
+                      />
 
-                    {/* 404 route */}
-                    <Route
-                      path="*"
-                      element={
-                        <PageErrorBoundary pageName="404 page">
-                          <NotFoundPage />
-                        </PageErrorBoundary>
-                      }
-                    />
-                  </Routes>
-                </ErrorBoundary>
-              </Suspense>
-            </div>
-          </Router>
-        </AuthProvider>
+                      {/* 404 route */}
+                      <Route
+                        path="*"
+                        element={
+                          <PageErrorBoundary pageName="404 page">
+                            <NotFoundPage />
+                          </PageErrorBoundary>
+                        }
+                      />
+                    </Routes>
+                  </ErrorBoundary>
+                </Suspense>
+              </div>
+            </Router>
+          </AuthProvider>
+        </ThemeProvider>
 
         <ReactQueryDevtools initialIsOpen={false} />
 
