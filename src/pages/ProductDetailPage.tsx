@@ -1,4 +1,3 @@
-import ConfirmModal from '@/components/ui/confimModal';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import ProductDetailSkeleton from '@/components/ui/ProductDetailSkeleton';
 import ErrorFallback from '@/components/ui/ErrorFallback';
@@ -7,7 +6,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeleteProduct, useProduct } from '@/hooks/useProducts';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, lazy, Suspense } from 'react';
+
+const ConfirmModal = lazy(() => import('@/components/ui/confimModal'));
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PageHeader from '@/components/layout/PageHeader';
@@ -204,13 +205,21 @@ const ProductDetailPage = () => {
             </div>
           )}
           {isDeleteModalShown && (
-            <ConfirmModal
-              action={`Are you sure you want to delete "${product.title}"?`}
-              accept={handleConfirmDelete}
-              deny={hideDeleteModal}
-              acceptLabel="Delete"
-              denyLabel="Cancel"
-            />
+            <Suspense
+              fallback={
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-6 animate-pulse w-80 h-32"></div>
+                </div>
+              }
+            >
+              <ConfirmModal
+                action={`Are you sure you want to delete "${product.title}"?`}
+                accept={handleConfirmDelete}
+                deny={hideDeleteModal}
+                acceptLabel="Delete"
+                denyLabel="Cancel"
+              />
+            </Suspense>
           )}
         </main>
       </div>
