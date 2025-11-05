@@ -1,4 +1,3 @@
-import ConfirmModal from '@/components/ui/confimModal';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import ProductDetailSkeleton from '@/components/ui/ProductDetailSkeleton';
 import ErrorFallback from '@/components/ui/ErrorFallback';
@@ -7,7 +6,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeleteProduct, useProduct } from '@/hooks/useProducts';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, lazy, Suspense } from 'react';
+
+const ConfirmModal = lazy(() => import('@/components/ui/confimModal'));
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PageHeader from '@/components/layout/PageHeader';
@@ -20,7 +21,6 @@ const ProductDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { user, logout, isAuthenticated } = useAuth();
 
-  // Always go back to products page
   const backUrl = '/';
 
   const { data: product, isLoading, isError } = useProduct(id);
@@ -107,7 +107,6 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
       <div className="container mx-auto px-4 pt-8 pb-4">
         <PageHeader
           isAuthenticated={isAuthenticated}
@@ -116,14 +115,10 @@ const ProductDetailPage = () => {
         />
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
         <main id="main-content" className="max-w-4xl mx-auto" tabIndex={-1}>
           <Breadcrumbs items={breadcrumbs} />
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            {/* <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Product Details
-          </h1> */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Link to={backUrl} className="btn-secondary text-center">
                 Back to Products
@@ -132,7 +127,6 @@ const ProductDetailPage = () => {
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Image Gallery */}
               <div className="space-y-4">
                 <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
                   <Image
@@ -163,7 +157,6 @@ const ProductDetailPage = () => {
                 </div>
               </div>
 
-              {/* Product Info */}
               <div className="space-y-6">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -174,7 +167,7 @@ const ProductDetailPage = () => {
                   </p>
                 </div>
 
-                <div className="text-3xl font-bold text-primary-700">
+                <div className="text-4xl font-bold text-green-600">
                   ${product.price}
                 </div>
 
@@ -212,13 +205,21 @@ const ProductDetailPage = () => {
             </div>
           )}
           {isDeleteModalShown && (
-            <ConfirmModal
-              action={`Are you sure you want to delete "${product.title}"?`}
-              accept={handleConfirmDelete}
-              deny={hideDeleteModal}
-              acceptLabel="Delete"
-              denyLabel="Cancel"
-            />
+            <Suspense
+              fallback={
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-6 animate-pulse w-80 h-32"></div>
+                </div>
+              }
+            >
+              <ConfirmModal
+                action={`Are you sure you want to delete "${product.title}"?`}
+                accept={handleConfirmDelete}
+                deny={hideDeleteModal}
+                acceptLabel="Delete"
+                denyLabel="Cancel"
+              />
+            </Suspense>
           )}
         </main>
       </div>

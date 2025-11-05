@@ -25,7 +25,6 @@ const LoginPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If already authenticated - redirect to intended page or homepage
   const from = (location.state as any)?.from?.pathname || '/';
   if (isAuthenticated) {
     return <Navigate to={from} replace />;
@@ -88,7 +87,6 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        {/* Header */}
         <div>
           <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
             Sign in to your account
@@ -106,7 +104,6 @@ const LoginPage = () => {
           )}
 
           <div className="space-y-4">
-            {/* Email field */}
             <div>
               <label
                 htmlFor="email"
@@ -134,7 +131,6 @@ const LoginPage = () => {
               )}
             </div>
 
-            {/* Password field */}
             <div>
               <label
                 htmlFor="password"
@@ -163,7 +159,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Submit button */}
           <div>
             <button
               type="submit"
@@ -181,7 +176,6 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Demo credentials info */}
           <div className="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
             <p className="text-sm text-primary-800 dark:text-primary-200 font-medium">
               Demo credentials:

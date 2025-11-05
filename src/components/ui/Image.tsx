@@ -40,6 +40,8 @@ const Image = ({
           alt={alt}
           className={className}
           onError={() => setHasError(true)}
+          loading="lazy"
+          decoding="async"
           {...props}
         />
       );
@@ -80,6 +82,8 @@ const Image = ({
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
         onError={handleError}
         onLoad={handleLoad}
+        loading="lazy"
+        decoding="async"
         {...props}
       />
     </>

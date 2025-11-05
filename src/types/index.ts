@@ -1,4 +1,3 @@
-// API types
 export type {
   ApiResponse,
   ApiError,
@@ -9,8 +8,6 @@ export type {
   ProductSortField,
   SortOptions,
 } from './api.types';
-
-// Product types
 export type {
   Product,
   CreateProductRequest,
@@ -18,15 +15,7 @@ export type {
   ProductFormData,
   ProductTableRow,
 } from './product.types';
-
-// Category types
-export type {
-  Category,
-  CategoryOption,
-  CategorySlugOption,
-} from './category.types';
-
-// Auth types
+export type { Category, CategoryOption } from './category.types';
 export type {
   LoginRequest,
   LoginResponse,

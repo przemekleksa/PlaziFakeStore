@@ -16,7 +16,6 @@ const ConfirmModal = ({
   deny,
   denyLabel = 'No',
 }: ConfirmModalProps) => {
-  // Handle Escape key to close modal
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -28,9 +27,7 @@ const ConfirmModal = ({
     return () => document.removeEventListener('keydown', handleEscape);
   }, [deny]);
 
-  // Handle click outside to close modal
   const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
-    // Only close if clicking on the backdrop itself, not on the modal content
     if (event.target === event.currentTarget) {
       deny();
     }

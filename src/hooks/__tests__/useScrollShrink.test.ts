@@ -1,14 +1,12 @@
 import { renderHook, act } from '@testing-library/react';
 import { useScrollShrink } from '../useScrollShrink';
 
-// Mock window.scrollY
 Object.defineProperty(window, 'scrollY', {
   writable: true,
   configurable: true,
   value: 0,
 });
 
-// Mock addEventListener and removeEventListener
 const mockAddEventListener = vi.fn();
 const mockRemoveEventListener = vi.fn();
 
@@ -31,7 +29,6 @@ describe('useScrollShrink', () => {
   });
 
   afterEach(() => {
-    // Clean up any remaining event listeners
     mockAddEventListener.mockClear();
     mockRemoveEventListener.mockClear();
   });
@@ -58,10 +55,7 @@ describe('useScrollShrink', () => {
     it('returns true when scrolled past default threshold (100px)', () => {
       const { result } = renderHook(() => useScrollShrink());
 
-      // Get the scroll handler that was registered
       const scrollHandler = mockAddEventListener.mock.calls[0][1];
-
-      // Simulate scrolling past threshold
       act(() => {
         window.scrollY = 150;
         scrollHandler();
@@ -75,7 +69,6 @@ describe('useScrollShrink', () => {
 
       const scrollHandler = mockAddEventListener.mock.calls[0][1];
 
-      // Scroll past threshold
       act(() => {
         window.scrollY = 150;
         scrollHandler();
@@ -83,7 +76,6 @@ describe('useScrollShrink', () => {
 
       expect(result.current).toBe(true);
 
-      // Scroll back above threshold
       act(() => {
         window.scrollY = 50;
         scrollHandler();
@@ -126,15 +118,12 @@ describe('useScrollShrink', () => {
 
       const scrollHandler = mockAddEventListener.mock.calls[0][1];
 
-      // Scroll past default threshold but below custom threshold
       act(() => {
         window.scrollY = 150;
         scrollHandler();
       });
 
       expect(result.current).toBe(false);
-
-      // Scroll past custom threshold
       act(() => {
         window.scrollY = 250;
         scrollHandler();
@@ -179,10 +168,7 @@ describe('useScrollShrink', () => {
 
       const firstHandler = mockAddEventListener.mock.calls[0][1];
 
-      // Change threshold
       rerender({ threshold: 200 });
-
-      // Should remove old listener and add new one
       expect(mockRemoveEventListener).toHaveBeenCalledWith(
         'scroll',
         firstHandler
@@ -223,7 +209,6 @@ describe('useScrollShrink', () => {
 
       const scrollHandler = mockAddEventListener.mock.calls[0][1];
 
-      // Any positive scroll should trigger
       act(() => {
         window.scrollY = 1;
         scrollHandler();

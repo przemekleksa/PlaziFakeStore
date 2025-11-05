@@ -3,7 +3,6 @@ import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// Create a new QueryClient for each test to avoid state leakage
 const createTestQueryClient = () =>
   new QueryClient({
     defaultOptions: {
@@ -36,8 +35,6 @@ export const renderWithProviders = (
   return render(ui, { wrapper: Wrapper, ...renderOptions });
 };
 
-// Legacy alias for backward compatibility
 export const renderWithRouter = renderWithProviders;
 
-// Re-export everything from testing-library
 export * from '@testing-library/react';

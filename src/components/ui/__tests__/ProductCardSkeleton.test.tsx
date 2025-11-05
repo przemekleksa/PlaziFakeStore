@@ -10,7 +10,6 @@ describe('ProductCardSkeleton', () => {
   it('has basic skeleton structure', () => {
     const { container } = render(<ProductCardSkeleton />);
 
-    // Should have skeleton elements with animate-pulse class
     const skeletonElements = container.querySelectorAll('.animate-pulse');
     expect(skeletonElements.length).toBeGreaterThan(0);
   });

@@ -36,7 +36,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
             onClick={handleLogoClick}
           >
             <img
-              src="/assets/images/platziStoreLogo.png"
+              src="/assets/images/PFS.webp"
               alt="Platzi Store Logo"
               className="w-12 h-12 sm:w-16 sm:h-16 mr-4 object-contain group-hover:scale-105 transition-transform duration-200"
             />

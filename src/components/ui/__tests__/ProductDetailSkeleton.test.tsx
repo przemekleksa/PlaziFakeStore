@@ -10,11 +10,9 @@ describe('ProductDetailSkeleton', () => {
   it('has main skeleton sections', () => {
     const { container } = render(<ProductDetailSkeleton />);
 
-    // Should have skeleton elements with animate-pulse class
     const skeletonElements = container.querySelectorAll('.animate-pulse');
     expect(skeletonElements.length).toBeGreaterThan(0);
 
-    // Should have grid layout for image and info
     const gridElement = container.querySelector('.grid');
     expect(gridElement).toBeInTheDocument();
   });

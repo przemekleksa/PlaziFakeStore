@@ -1,4 +1,9 @@
-import { api, setStoredToken, removeStoredToken } from './api';
+import {
+  api,
+  setStoredToken,
+  removeStoredToken,
+  setStoredRefreshToken,
+} from './api';
 import { LoginRequest, LoginResponse, User } from '@/types';
 
 export const authService = {
@@ -7,6 +12,10 @@ export const authService = {
 
     if (response.access_token) {
       setStoredToken(response.access_token);
+    }
+
+    if (response.refresh_token) {
+      setStoredRefreshToken(response.refresh_token);
     }
 
     return response;

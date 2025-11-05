@@ -6,7 +6,6 @@ import React from 'react';
 import ProductDetailPage from '../ProductDetailPage';
 import { AuthProvider } from '@/contexts/AuthContext';
 
-// Mock the services module
 vi.mock('@/services', () => ({
   productsService: {
     getProduct: vi.fn(),
@@ -23,7 +22,6 @@ vi.mock('@/services', () => ({
   removeStoredToken: vi.fn(),
 }));
 
-// Import mocked services
 import { productsService } from '@/services';
 
 const mockProductsService = vi.mocked(productsService);
@@ -31,7 +29,6 @@ const mockProductsService = vi.mocked(productsService);
 const createMockProduct = (overrides: Partial<any> = {}) => ({
   id: 1,
   title: 'Test Product',
-  slug: 'test-product',
   price: 100,
   description: 'This is a detailed description of the test product.',
   images: [
@@ -42,7 +39,6 @@ const createMockProduct = (overrides: Partial<any> = {}) => ({
   category: {
     id: 1,
     name: 'Test Category',
-    slug: 'test-category',
     image: 'category.jpg',
     creationAt: '2023-01-01T00:00:00Z',
     updatedAt: '2023-01-01T00:00:00Z',
@@ -116,7 +112,6 @@ describe('ProductDetailPage Integration', () => {
     const TestWrapper = createTestWrapper('/products/1');
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
-    // Check for skeleton loading state
     expect(screen.getByTestId('product-detail-skeleton')).toBeInTheDocument();
 
     resolveProduct!(createMockProduct());
@@ -162,20 +157,16 @@ describe('ProductDetailPage Integration', () => {
       ).toBeInTheDocument();
     });
 
-    // Check main image
     const mainImage = screen.getByAltText('Test Product');
     expect(mainImage).toHaveAttribute('src', 'https://example.com/image1.jpg');
 
-    // Check thumbnails
     const thumbnails = screen
       .getAllByRole('button')
       .filter(button => button.querySelector('img'));
     expect(thumbnails).toHaveLength(3);
 
-    // Click second thumbnail
     fireEvent.click(thumbnails[1]);
 
-    // Main image should change
     await waitFor(() => {
       expect(mainImage).toHaveAttribute(
         'src',
@@ -223,7 +214,6 @@ describe('ProductDetailPage Integration', () => {
       ).toBeInTheDocument();
     });
 
-    // Check if creation date is displayed (format may vary based on locale)
     expect(screen.getByText(/created:/i)).toBeInTheDocument();
     expect(
       screen.getByText(/6\/15\/2023|15\/6\/2023|2023-06-15/)
@@ -279,7 +269,6 @@ describe('ProductDetailPage Integration', () => {
       'https://example.com/single-image.jpg'
     );
 
-    // Should have only one thumbnail
     const thumbnails = screen
       .getAllByRole('button')
       .filter(button => button.querySelector('img'));

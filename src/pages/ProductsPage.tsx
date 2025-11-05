@@ -1,16 +1,18 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCategories } from '@/hooks/useCategories';
 import { useProductsLogic } from '@/hooks/useProductsLogic';
 import { useScrollShrink } from '../hooks/useScrollShrink';
-
 import PageHeader from '@/components/layout/PageHeader';
 import ProductsSearch from '@/components/products/ProductsSearch';
-import ProductsFilters from '@/components/products/ProductsFilters';
 import CompactSearchFilters from '@/components/products/CompactSearchFilters';
 import ProductsGrid from '@/components/products/ProductsGrid';
 import Pagination from '@/components/ui/Pagination';
-import ConfirmModal from '@/components/ui/confimModal';
+
+const ProductsFilters = lazy(
+  () => import('@/components/products/ProductsFilters')
+);
+const ConfirmModal = lazy(() => import('@/components/ui/confimModal'));
 
 const ProductsPage = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -72,18 +74,24 @@ const ProductsPage = () => {
               onClear={clearSearch}
             />
 
-            <ProductsFilters
-              filters={{
-                priceMin: urlParams.priceMin,
-                priceMax: urlParams.priceMax,
-                category: urlParams.category,
-                sortBy: urlParams.sortBy,
-              }}
-              categories={categories || []}
-              onFiltersChange={handleFiltersChange}
-              isOpen={filtersOpen}
-              onToggle={() => setFiltersOpen(!filtersOpen)}
-            />
+            <Suspense
+              fallback={
+                <div className="h-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+              }
+            >
+              <ProductsFilters
+                filters={{
+                  priceMin: urlParams.priceMin,
+                  priceMax: urlParams.priceMax,
+                  category: urlParams.category,
+                  sortBy: urlParams.sortBy,
+                }}
+                categories={categories || []}
+                onFiltersChange={handleFiltersChange}
+                isOpen={filtersOpen}
+                onToggle={() => setFiltersOpen(!filtersOpen)}
+              />
+            </Suspense>
           </main>
         </div>
       )}
@@ -98,18 +106,24 @@ const ProductsPage = () => {
           />
           <main className="max-w-6xl mx-auto">
             <ProductsSearch value="" onChange={() => {}} onClear={() => {}} />
-            <ProductsFilters
-              filters={{
-                priceMin: '',
-                priceMax: '',
-                category: '',
-                sortBy: '',
-              }}
-              categories={[]}
-              onFiltersChange={() => {}}
-              isOpen={false}
-              onToggle={() => {}}
-            />
+            <Suspense
+              fallback={
+                <div className="h-16 bg-gray-100 dark:bg-gray-800 rounded animate-pulse" />
+              }
+            >
+              <ProductsFilters
+                filters={{
+                  priceMin: '',
+                  priceMax: '',
+                  category: '',
+                  sortBy: '',
+                }}
+                categories={[]}
+                onFiltersChange={() => {}}
+                isOpen={false}
+                onToggle={() => {}}
+              />
+            </Suspense>
           </main>
         </div>
       )}
@@ -163,15 +177,22 @@ const ProductsPage = () => {
         </main>
       </div>
 
-      {/* Delete Confirmation Modal */}
       {deleteModalState.isOpen && (
-        <ConfirmModal
-          action={`Are you sure you want to delete "${deleteModalState.productTitle}"?`}
-          accept={handleConfirmDelete}
-          deny={hideDeleteModal}
-          acceptLabel="Delete"
-          denyLabel="Cancel"
-        />
+        <Suspense
+          fallback={
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 animate-pulse w-80 h-32"></div>
+            </div>
+          }
+        >
+          <ConfirmModal
+            action={`Are you sure you want to delete "${deleteModalState.productTitle}"?`}
+            accept={handleConfirmDelete}
+            deny={hideDeleteModal}
+            acceptLabel="Delete"
+            denyLabel="Cancel"
+          />
+        </Suspense>
       )}
     </div>
   );

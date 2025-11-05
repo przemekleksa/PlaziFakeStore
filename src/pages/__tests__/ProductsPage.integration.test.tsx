@@ -6,7 +6,6 @@ import React from 'react';
 import ProductsPage from '../ProductsPage';
 import { AuthProvider } from '@/contexts/AuthContext';
 
-// Mock the services module
 vi.mock('@/services', () => ({
   productsService: {
     getProducts: vi.fn(),
@@ -24,7 +23,6 @@ vi.mock('@/services', () => ({
   removeStoredToken: vi.fn(),
 }));
 
-// Import mocked services
 import { productsService } from '@/services';
 
 const mockProductsService = vi.mocked(productsService);
@@ -32,14 +30,12 @@ const mockProductsService = vi.mocked(productsService);
 const createMockProduct = (overrides: Partial<any> = {}) => ({
   id: 1,
   title: 'Test Product',
-  slug: 'test-product',
   price: 100,
   description: 'Test description',
   images: ['test-image.jpg'],
   category: {
     id: 1,
     name: 'Test Category',
-    slug: 'test-category',
     image: 'category.jpg',
     creationAt: '2023-01-01T00:00:00Z',
     updatedAt: '2023-01-01T00:00:00Z',
@@ -150,7 +146,6 @@ describe('ProductsPage Integration', () => {
       expect(screen.getByText('Product 1')).toBeInTheDocument();
     });
 
-    // Previous button should not be visible on first page
     expect(screen.queryByText('Previous')).not.toBeInTheDocument();
     expect(screen.getByText('Next')).toBeInTheDocument();
     expect(screen.getByText(/of \d+/)).toBeInTheDocument();
@@ -167,7 +162,6 @@ describe('ProductsPage Integration', () => {
     const TestWrapper = createTestWrapper();
     render(<ProductsPage />, { wrapper: TestWrapper });
 
-    // Check for skeleton loading state instead of spinner
     expect(screen.getByTestId('products-grid-skeleton')).toBeInTheDocument();
 
     resolveProducts!([

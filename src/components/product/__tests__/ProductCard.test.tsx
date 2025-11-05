@@ -6,14 +6,12 @@ import { Product } from '@/types';
 const mockProduct: Product = {
   id: 1,
   title: 'Test Product',
-  slug: 'test-product',
   price: 100,
   description: 'Test description',
   images: ['https://example.com/image.jpg'],
   category: {
     id: 1,
     name: 'Test Category',
-    slug: 'test-category',
     image: 'https://example.com/category.jpg',
     creationAt: '2023-01-01T00:00:00Z',
     updatedAt: '2023-01-01T00:00:00Z',

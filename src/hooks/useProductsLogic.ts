@@ -15,7 +15,6 @@ export interface ProductsPageParams {
 }
 
 export const useProductsLogic = () => {
-  // URL params management with sessionStorage hybrid
   const {
     params: urlParams,
     updateParams,
@@ -93,7 +92,6 @@ export const useProductsLogic = () => {
 
   const [previousSortBy, setPreviousSortBy] = useState<string | null>(null);
 
-  // Reset offset when sort changes (but not on initial load)
   useEffect(() => {
     if (isInitialized) {
       if (previousSortBy === null) {
@@ -225,7 +223,6 @@ export const useProductsLogic = () => {
   }, [updateParams]);
 
   const clearAllFilters = useCallback(() => {
-    // Clear both URL and sessionStorage
     clearSessionStorage();
     updateParams({
       sortBy: '',
@@ -257,7 +254,6 @@ export const useProductsLogic = () => {
   );
 
   return {
-    // State
     urlParams,
     sortedProducts,
     totalProducts,
@@ -267,8 +263,6 @@ export const useProductsLogic = () => {
     error,
     debouncedSearch,
     deleteModalState,
-
-    // Handlers
     showDeleteModal,
     hideDeleteModal,
     handleConfirmDelete,
