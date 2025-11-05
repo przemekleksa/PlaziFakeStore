@@ -19,18 +19,16 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
   return (
     <>
       <header className="flex justify-between items-center mb-4 sm:mb-8">
-        <div>
+        <div className="flex flex-col">
           {/* Logo and Brand Name - Clickable Link to Home */}
-          <Link to="/" className="flex items-center lg:mb-2 sm:mb-0 group">
+          <Link to="/" className="flex items-center mb-1 group">
             <img
               src="/assets/images/platziStoreLogo.png"
               alt="Platzi Store Logo"
               className="w-12 h-12 sm:w-16 sm:h-16 mr-4 object-contain group-hover:scale-105 transition-transform duration-200"
             />
-            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white">
-              {/* Mobile: inline, Desktop: stacked */}
-              <span className="sm:block inline">Platzi </span>
-              <span className="sm:block inline">Fake Store</span>
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+              Platzi Fake Store
             </h1>
           </Link>
           {/* User Welcome Message */}
@@ -53,7 +51,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center space-x-4">
+        <div className="hidden lg:flex items-center space-x-4 self-start mt-2">
           {isAuthenticated && (
             <Link to="/products/new" className="btn-primary">
               Add Product
@@ -95,7 +93,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="lg:hidden shadow-md">
+        <div className="lg:hidden shadow-md self-start mt-2">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"

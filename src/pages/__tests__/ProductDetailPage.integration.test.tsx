@@ -116,8 +116,8 @@ describe('ProductDetailPage Integration', () => {
     const TestWrapper = createTestWrapper('/products/1');
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
-    // Check for loading spinner by class
-    expect(document.querySelector('.animate-spin')).toBeInTheDocument();
+    // Check for skeleton loading state
+    expect(screen.getByTestId('product-detail-skeleton')).toBeInTheDocument();
 
     resolveProduct!(createMockProduct());
 
@@ -136,9 +136,7 @@ describe('ProductDetailPage Integration', () => {
     render(<ProductDetailPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/product not found or failed to load/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText('Product not found')).toBeInTheDocument();
     });
 
     expect(screen.getByText('Back to Products')).toBeInTheDocument();
