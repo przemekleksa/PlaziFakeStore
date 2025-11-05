@@ -8,6 +8,9 @@ This document describes the main components used in the Platzi Fake Store applic
 - [Form Components](#form-components)
 - [Layout Components](#layout-components)
 - [Product Components](#product-components)
+- [Products Components](#products-components)
+- [Category Components](#category-components)
+- [Accessibility Components](#accessibility-components)
 - [Page Components](#page-components)
 
 ## UI Components
@@ -75,6 +78,23 @@ import Skeleton from '@/components/ui/Skeleton';
 - `width`: string (Tailwind width class)
 - `className`: string
 
+### ThemeToggle
+
+Dark/light mode toggle component.
+
+```tsx
+import ThemeToggle from '@/components/ui/ThemeToggle';
+
+<ThemeToggle />;
+```
+
+**Features:**
+
+- Toggles between light and dark themes
+- Persists theme preference
+- Smooth transition animations
+- Accessible button with proper ARIA labels
+
 ### ErrorBoundary
 
 Error boundary component for handling React errors.
@@ -91,6 +111,45 @@ import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 - `children`: ReactNode
 - `fallback`: ComponentType<{ error: Error; resetError: () => void }>
+
+### ConfirmModal
+
+**Lazy-loaded** confirmation modal component for destructive actions.
+
+```tsx
+import { lazy, Suspense } from 'react';
+const ConfirmModal = lazy(() => import('@/components/ui/ConfirmModal'));
+
+{
+  showModal && (
+    <Suspense fallback={<ModalSkeleton />}>
+      <ConfirmModal
+        action="Are you sure you want to delete this item?"
+        accept={handleConfirm}
+        deny={handleCancel}
+        acceptLabel="Delete"
+        denyLabel="Cancel"
+      />
+    </Suspense>
+  );
+}
+```
+
+**Props:**
+
+- `action`: string - Confirmation message
+- `accept`: () => void - Confirm action callback
+- `deny`: () => void - Cancel action callback
+- `acceptLabel`: string - Confirm button text (default: "Yes")
+- `denyLabel`: string - Cancel button text (default: "No")
+
+**Features:**
+
+- Lazy-loaded to reduce initial bundle size
+- Keyboard navigation (Escape to close)
+- Click outside to close
+- Focus management and accessibility
+- Customizable button labels
 
 ## Form Components
 
@@ -131,22 +190,29 @@ import LoginForm from '@/components/forms/LoginForm';
 
 ## Layout Components
 
-### Header
+### PageHeader
 
-Main application header with navigation.
+Main application header with navigation and user information.
 
 ```tsx
-import Header from '@/components/layout/Header';
+import PageHeader from '@/components/layout/PageHeader';
 
-<Header />;
+<PageHeader isAuthenticated={isAuthenticated} user={user} onLogout={logout} />;
 ```
+
+**Props:**
+
+- `isAuthenticated`: boolean
+- `user`: User | null
+- `onLogout`: () => void
 
 **Features:**
 
-- User authentication status
-- Navigation links
+- User authentication status display
+- Navigation between Products/Categories
 - Mobile responsive menu
-- Dark mode toggle
+- User avatar and welcome message
+- Logout functionality
 
 ### AuthGuard
 
@@ -189,7 +255,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 ### ProductCard
 
-Card component for displaying product information.
+Card component for displaying individual product information.
 
 ```tsx
 import ProductCard from '@/components/product/ProductCard';
@@ -209,19 +275,21 @@ import ProductCard from '@/components/product/ProductCard';
 
 **Features:**
 
-- Lazy image loading
-- Hover prefetching
+- Optimized image loading with lazy loading
 - Edit/delete actions for authenticated users
-- Responsive design
+- Responsive card layout
+- Hover effects and interactions
 
-### ProductGrid
+## Products Components
 
-Grid layout for displaying multiple products.
+### ProductsGrid
+
+Grid layout component for displaying multiple products.
 
 ```tsx
-import ProductGrid from '@/components/product/ProductGrid';
+import ProductsGrid from '@/components/products/ProductsGrid';
 
-<ProductGrid
+<ProductsGrid
   products={products}
   isAuthenticated={isAuth}
   onDelete={handleDelete}
@@ -234,18 +302,23 @@ import ProductGrid from '@/components/product/ProductGrid';
 - `isAuthenticated`: boolean
 - `onDelete`: (id: number) => void
 
-### ProductFilters
+### ProductsFilters
 
-Filter component for product search and filtering.
+**Lazy-loaded** filter component for product search and filtering.
 
 ```tsx
-import ProductFilters from '@/components/product/ProductFilters';
+import { lazy, Suspense } from 'react';
+const ProductsFilters = lazy(
+  () => import('@/components/products/ProductsFilters')
+);
 
-<ProductFilters
-  filters={filters}
-  onFiltersChange={setFilters}
-  categories={categories}
-/>;
+<Suspense fallback={<FiltersSkeleton />}>
+  <ProductsFilters
+    filters={filters}
+    onFiltersChange={setFilters}
+    categories={categories}
+  />
+</Suspense>;
 ```
 
 **Props:**
@@ -253,6 +326,94 @@ import ProductFilters from '@/components/product/ProductFilters';
 - `filters`: ProductFilters
 - `onFiltersChange`: (filters: ProductFilters) => void
 - `categories`: Category[]
+
+### ProductsSearch
+
+Search input component with debounced search functionality.
+
+```tsx
+import ProductsSearch from '@/components/products/ProductsSearch';
+
+<ProductsSearch
+  value={searchTerm}
+  onChange={handleSearchChange}
+  onClear={clearSearch}
+/>;
+```
+
+### CompactSearchFilters
+
+Compact version of search filters for mobile/scrolled states.
+
+```tsx
+import CompactSearchFilters from '@/components/products/CompactSearchFilters';
+
+<CompactSearchFilters
+  searchValue={search}
+  onSearchChange={setSearch}
+  categories={categories}
+  selectedCategory={category}
+  onCategoryChange={setCategory}
+/>;
+```
+
+## Category Components
+
+### CategoryCard
+
+Card component for displaying category information.
+
+```tsx
+import CategoryCard from '@/components/categories/CategoryCard';
+
+<CategoryCard category={category} />;
+```
+
+**Props:**
+
+- `category`: Category
+
+**Features:**
+
+- Category image with lazy loading
+- Link to filtered products view
+- Responsive design
+
+## Accessibility Components
+
+### FocusManager
+
+Component for managing focus within modals and overlays.
+
+```tsx
+import FocusManager from '@/components/accessibility/FocusManager';
+
+<FocusManager trapFocus={true} autoFocus={true} restoreFocus={true}>
+  <Modal>Content</Modal>
+</FocusManager>;
+```
+
+**Props:**
+
+- `trapFocus`: boolean - Trap focus within component
+- `autoFocus`: boolean - Auto-focus first element
+- `restoreFocus`: boolean - Restore focus on unmount
+
+### SkipToContent
+
+Skip navigation link for keyboard users.
+
+```tsx
+import SkipToContent from '@/components/accessibility/SkipToContent';
+
+<SkipToContent />;
+```
+
+**Features:**
+
+- Hidden until focused
+- Jumps to main content
+- WCAG compliance
 
 ## Page Components
 
@@ -313,11 +474,32 @@ All components include:
 
 ## Performance Optimizations
 
-- **Code Splitting**: All page components use React.lazy
-- **Memoization**: Components use React.memo where appropriate
-- **Image Optimization**: Lazy loading with native loading="lazy"
-- **Prefetching**: Hover/focus prefetching for better UX
-- **Caching**: TanStack Query for efficient data caching
+### Code Splitting & Lazy Loading
+
+- **Page Components**: All route components use React.lazy for dynamic imports
+- **Heavy Components**: ProductsFilters and ConfirmModal are lazy-loaded with Suspense boundaries
+- **Suspense Boundaries**: Proper loading states for all lazy components
+- **Bundle Splitting**: Automatic vendor and component chunk separation
+
+### Image Optimization
+
+- **Native Lazy Loading**: `loading="lazy"` attribute on all images
+- **Async Decoding**: `decoding="async"` for better performance
+- **Fallback Handling**: Graceful error states with placeholder images
+- **Responsive Images**: Optimized for different screen sizes
+
+### Component Optimizations
+
+- **Memoization**: Strategic use of React.memo for expensive components
+- **Debounced Search**: Search input with 300ms debounce
+- **Virtual Scrolling**: Efficient rendering for large product lists
+- **Prefetching**: Hover/focus prefetching for navigation links
+
+### Caching Strategy
+
+- **TanStack Query**: Smart server state caching with 10s stale time
+- **Component State**: Optimized local state management
+- **URL State Sync**: Efficient URL parameter synchronization
 
 ## Testing
 
