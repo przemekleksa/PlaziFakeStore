@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import PageHeader from '@/components/layout/PageHeader';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const DashboardPage = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -17,9 +18,9 @@ const DashboardPage = () => {
         <div className="max-w-2xl mx-auto">
           {/* Welcome Message */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Welcome back, {user?.name || 'User'}! 👋
-            </h2>
+            </h1>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               You're successfully logged in to your Platzi Store dashboard. Use
               the navigation above to manage your products and categories.
@@ -27,10 +28,10 @@ const DashboardPage = () => {
           </div>
 
           {/* User Information */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-              Your Account Information
-            </h3>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+              Account Information
+            </h2>
 
             {/* Large User Avatar */}
             <div className="flex flex-col items-center mb-6">
@@ -48,9 +49,9 @@ const DashboardPage = () => {
                   </span>
                 </div>
               )}
-              <h4 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-4">
                 {user?.name || 'User'}
-              </h4>
+              </h3>
             </div>
 
             <div className="space-y-3">
@@ -85,6 +86,27 @@ const DashboardPage = () => {
                 <span className="text-gray-900 dark:text-white font-mono text-sm">
                   {user?.id || 'N/A'}
                 </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Settings */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+              Settings
+            </h2>
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-700">
+                <div>
+                  <span className="text-gray-900 dark:text-white font-medium">
+                    Theme
+                  </span>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Choose your preferred theme
+                  </p>
+                </div>
+                <ThemeToggle />
               </div>
             </div>
           </div>

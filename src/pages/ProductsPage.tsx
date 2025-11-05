@@ -143,6 +143,7 @@ const ProductsPage = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
         <main id="main-content" className="max-w-6xl mx-auto" tabIndex={-1}>
+          <h1 className="sr-only">Products Catalog</h1>
           <ProductsGrid
             products={sortedProducts}
             isAuthenticated={isAuthenticated}

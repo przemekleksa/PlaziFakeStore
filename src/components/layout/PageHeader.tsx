@@ -40,9 +40,9 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
               alt="Platzi Store Logo"
               className="w-12 h-12 sm:w-16 sm:h-16 mr-4 object-contain group-hover:scale-105 transition-transform duration-200"
             />
-            <h1 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
+            <div className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
               Platzi Fake Store
-            </h1>
+            </div>
           </Link>
           {/* User Welcome Message */}
           {isAuthenticated && (

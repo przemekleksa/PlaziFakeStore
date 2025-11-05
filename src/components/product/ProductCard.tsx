@@ -49,7 +49,7 @@ const ProductCard = memo(
             onMouseEnter={handleMouseEnter}
             onFocus={handleFocus}
           >
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-3 hover:text-primary-600 transition-colors">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-3 hover:text-primary-700 transition-colors">
               {product.title}
             </h3>
           </Link>
@@ -59,7 +59,7 @@ const ProductCard = memo(
           </p>
 
           <div className="flex items-center justify-between mt-auto">
-            <span className="text-xl font-bold text-primary-600">
+            <span className="text-xl font-bold text-primary-700">
               ${product.price}
             </span>
 
