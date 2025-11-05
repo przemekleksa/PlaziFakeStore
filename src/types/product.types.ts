@@ -3,7 +3,6 @@ import { Category } from './category.types.ts';
 export interface Product {
   id: number;
   title: string;
-  slug: string;
   price: number;
   description: string;
   images: string[];
@@ -13,7 +12,6 @@ export interface Product {
 }
 export interface CreateProductRequest {
   title: string;
-  slug?: string;
   price: number;
   description: string;
   images: string[];
@@ -22,7 +20,6 @@ export interface CreateProductRequest {
 export interface UpdateProductRequest extends Partial<CreateProductRequest> {}
 export interface ProductFormData {
   title: string;
-  slug: string;
   price: string;
   description: string;
   images: string[];

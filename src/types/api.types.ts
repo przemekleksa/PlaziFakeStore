@@ -26,7 +26,6 @@ export interface ProductFilters extends PaginationParams {
   price_min?: number;
   price_max?: number;
   categoryId?: number;
-  categorySlug?: string;
 }
 export type SortOrder = 'asc' | 'desc';
 export type ProductSortField = 'title' | 'price' | 'creationAt' | 'updatedAt';

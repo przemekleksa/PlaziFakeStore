@@ -17,8 +17,6 @@ export const productsService = {
       params.append('price_max', filters.price_max.toString());
     if (filters.categoryId)
       params.append('categoryId', filters.categoryId.toString());
-    if (filters.categorySlug)
-      params.append('categorySlug', filters.categorySlug);
     if (filters.limit) params.append('limit', filters.limit.toString());
     if (filters.offset !== undefined)
       params.append('offset', filters.offset.toString());
@@ -31,11 +29,6 @@ export const productsService = {
 
   getProduct: async (id: string): Promise<Product> => {
     return api.get<Product>(`/products/${id}`);
-  },
-
-  getProductBySlug: async (slug: string): Promise<Product | null> => {
-    const products = await productsService.getProducts({ limit: 1000 });
-    return products.find(product => product.slug === slug) || null;
   },
 
   createProduct: async (

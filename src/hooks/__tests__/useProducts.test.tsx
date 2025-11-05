@@ -26,14 +26,12 @@ const mockProductsService = vi.mocked(productsService);
 const createMockProduct = (overrides: Partial<any> = {}) => ({
   id: 1,
   title: 'Test Product',
-  slug: 'test-product',
   price: 100,
   description: 'Test description',
   images: ['test-image.jpg'],
   category: {
     id: 1,
     name: 'Test Category',
-    slug: 'test-category',
     image: 'category.jpg',
     creationAt: '2023-01-01T00:00:00Z',
     updatedAt: '2023-01-01T00:00:00Z',
@@ -71,14 +69,12 @@ describe('useProducts', () => {
         {
           id: 1,
           title: 'Product 1',
-          slug: 'product-1',
           price: 100,
           description: 'Test product 1',
           images: ['image1.jpg'],
           category: {
             id: 1,
             name: 'Category 1',
-            slug: 'category-1',
             image: 'cat1.jpg',
             creationAt: '2023-01-01',
             updatedAt: '2023-01-01',
@@ -89,14 +85,12 @@ describe('useProducts', () => {
         {
           id: 2,
           title: 'Product 2',
-          slug: 'product-2',
           price: 200,
           description: 'Test product 2',
           images: ['image2.jpg'],
           category: {
             id: 1,
             name: 'Category 1',
-            slug: 'category-1',
             image: 'cat1.jpg',
             creationAt: '2023-01-01',
             updatedAt: '2023-01-01',

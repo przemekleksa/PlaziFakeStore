@@ -15,11 +15,7 @@ export type {
   ProductFormData,
   ProductTableRow,
 } from './product.types';
-export type {
-  Category,
-  CategoryOption,
-  CategorySlugOption,
-} from './category.types';
+export type { Category, CategoryOption } from './category.types';
 export type {
   LoginRequest,
   LoginResponse,

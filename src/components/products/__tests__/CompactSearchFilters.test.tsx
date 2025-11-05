@@ -8,7 +8,6 @@ const mockCategories: Category[] = [
   {
     id: 1,
     name: 'Electronics',
-    slug: 'electronics',
     image: 'https://example.com/electronics.jpg',
     creationAt: '2023-01-01T00:00:00Z',
     updatedAt: '2023-01-01T00:00:00Z',

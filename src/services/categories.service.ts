@@ -1,5 +1,5 @@
 import { api } from './api';
-import { Category, CategoryOption, CategorySlugOption } from '@/types';
+import { Category, CategoryOption } from '@/types';
 
 export const categoriesService = {
   getCategories: async (): Promise<Category[]> => {
@@ -15,22 +15,7 @@ export const categoriesService = {
     return categories.map(category => ({
       value: category.id,
       label: category.name,
-      slug: category.slug,
     }));
-  },
-
-  getCategorySlugOptions: async (): Promise<CategorySlugOption[]> => {
-    const categories = await categoriesService.getCategories();
-    return categories.map(category => ({
-      value: category.slug,
-      label: category.name,
-      id: category.id,
-    }));
-  },
-
-  getCategoryBySlug: async (slug: string): Promise<Category | null> => {
-    const categories = await categoriesService.getCategories();
-    return categories.find(category => category.slug === slug) || null;
   },
 
   createCategory: async (

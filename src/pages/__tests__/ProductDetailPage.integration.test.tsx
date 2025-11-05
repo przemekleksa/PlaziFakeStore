@@ -29,7 +29,6 @@ const mockProductsService = vi.mocked(productsService);
 const createMockProduct = (overrides: Partial<any> = {}) => ({
   id: 1,
   title: 'Test Product',
-  slug: 'test-product',
   price: 100,
   description: 'This is a detailed description of the test product.',
   images: [
@@ -40,7 +39,6 @@ const createMockProduct = (overrides: Partial<any> = {}) => ({
   category: {
     id: 1,
     name: 'Test Category',
-    slug: 'test-category',
     image: 'category.jpg',
     creationAt: '2023-01-01T00:00:00Z',
     updatedAt: '2023-01-01T00:00:00Z',
