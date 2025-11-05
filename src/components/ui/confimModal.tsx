@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, MouseEvent } from 'react';
 import FocusManager from '@/components/accessibility/FocusManager';
 
 interface ConfirmModalProps {
@@ -29,7 +29,7 @@ const ConfirmModal = ({
   }, [deny]);
 
   // Handle click outside to close modal
-  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = (event: MouseEvent<HTMLDivElement>) => {
     // Only close if clicking on the backdrop itself, not on the modal content
     if (event.target === event.currentTarget) {
       deny();

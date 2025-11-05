@@ -6,12 +6,20 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
+    "build:analyze": "tsc && vite build --mode analyze",
+    "build:preview": "npm run build && npm run preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules/.vite",
+    "prepare": "npm run type-check && npm run lint && npm run test:run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.8.4",

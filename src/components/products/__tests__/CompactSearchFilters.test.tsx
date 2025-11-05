@@ -2,24 +2,7 @@ import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from '@/__tests__/test-utils';
 import CompactSearchFilters from '../CompactSearchFilters';
 import { Category } from '@/types';
-import { expect } from 'vitest';
-import { it } from 'vitest';
-import { expect } from 'vitest';
-import { vi } from 'vitest';
-import { it } from 'vitest';
-import { expect } from 'vitest';
-import { it } from 'vitest';
-import { expect } from 'vitest';
-import { expect } from 'vitest';
-import { expect } from 'vitest';
-import { it } from 'vitest';
-import { vi } from 'vitest';
-import { beforeEach } from 'vitest';
-import { describe } from 'vitest';
-import { vi } from 'vitest';
-import { vi } from 'vitest';
-import { vi } from 'vitest';
-import { vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const mockCategories: Category[] = [
   {

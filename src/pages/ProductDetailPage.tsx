@@ -2,6 +2,7 @@ import ConfirmModal from '@/components/ui/confimModal';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import ProductDetailSkeleton from '@/components/ui/ProductDetailSkeleton';
 import ErrorFallback from '@/components/ui/ErrorFallback';
+import Image from '@/components/ui/Image';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeleteProduct, useProduct } from '@/hooks/useProducts';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
@@ -44,8 +45,7 @@ const ProductDetailPage = () => {
           toast.success(`${product.title} deleted successfully!`);
           navigate(backUrl);
         },
-        onError: error => {
-          console.error('Failed to delete product:', error);
+        onError: () => {
           toast.error('Failed to delete product. Please try again.');
         },
       });
@@ -134,8 +134,8 @@ const ProductDetailPage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Image Gallery */}
               <div className="space-y-4">
-                <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                  <img
+                <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                  <Image
                     src={product.images[selectedImage]}
                     alt={product.title}
                     className="w-full h-full object-cover"
@@ -148,14 +148,15 @@ const ProductDetailPage = () => {
                       onClick={() => setSelectedImage(index)}
                       className={`flex-shrink-0 w-16 h-16 rounded border-2 overflow-hidden ${
                         selectedImage === index
-                          ? 'border-blue-500'
+                          ? 'border-primary-500'
                           : 'border-gray-200'
                       }`}
                     >
-                      <img
+                      <Image
                         src={image}
                         alt=""
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </button>
                   ))}

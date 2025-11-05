@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface LoadingContextType {
   isLoading: boolean;
   loadingMessage: string;
-  setLoading: (loading: boolean, message?: string) => void;
+  setLoading: (_loading: boolean, _message?: string) => void;
 }
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);

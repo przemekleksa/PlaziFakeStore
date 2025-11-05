@@ -11,8 +11,8 @@ const PageErrorBoundary = ({
   children,
   pageName = 'page',
 }: PageErrorBoundaryProps) => {
-  const handleError = (error: Error) => {
-    console.error(`Error in ${pageName}:`, error);
+  const handleError = () => {
+    // Error logging handled by parent ErrorBoundary
   };
 
   const fallback = (

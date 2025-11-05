@@ -6,7 +6,7 @@ import ErrorFallback from '@/components/ui/ErrorFallback';
 interface ProductsGridProps {
   products: Product[] | undefined;
   isAuthenticated: boolean;
-  onDelete: (id: number, title: string) => void;
+  onDelete: (_id: number, _title: string) => void;
   isLoading: boolean;
   error: Error | null;
   emptyMessage?: string;

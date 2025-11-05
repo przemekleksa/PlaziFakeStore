@@ -11,16 +11,12 @@ const CreateProductPage = () => {
   const breadcrumbs = useBreadcrumbs();
 
   const handleSubmit = (productData: any) => {
-    console.log('Creating product:', productData);
-
     createProduct.mutate(productData, {
       onSuccess: newProduct => {
-        console.log('Product created successfully:', newProduct);
         toast.success(`${newProduct.title} created successfully!`);
         navigate(`/products/${newProduct.id}`);
       },
-      onError: error => {
-        console.error('Failed to create product:', error);
+      onError: () => {
         toast.error('Failed to create product. Please try again.');
       },
     });

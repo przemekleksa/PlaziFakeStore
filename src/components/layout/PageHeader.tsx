@@ -12,6 +12,15 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
+  const handleLogoClick = () => {
+    try {
+      sessionStorage.removeItem('productFilters');
+      window.dispatchEvent(new Event('sessionStorageChange'));
+    } catch {
+      // Silently fail if sessionStorage is not available
+    }
+  };
+
   const isProductsPage = location.pathname === '/';
   const isCategoriesPage = location.pathname === '/categories';
   const isDashboardPage = location.pathname === '/dashboard';
@@ -21,7 +30,11 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
       <header className="flex justify-between items-center mb-4 ">
         <div className="flex flex-col">
           {/* Logo and Brand Name - Clickable Link to Home */}
-          <Link to="/" className="flex items-center mb-1 group">
+          <Link
+            to="/"
+            className="flex items-center mb-1 group"
+            onClick={handleLogoClick}
+          >
             <img
               src="/assets/images/platziStoreLogo.png"
               alt="Platzi Store Logo"
@@ -64,7 +77,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
               Categories
             </Link>
           ) : (
-            <Link to="/" className="btn-secondary">
+            <Link to="/" className="btn-secondary" onClick={handleLogoClick}>
               All Products
             </Link>
           )}
@@ -80,7 +93,7 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
                   <img
                     src={user.avatar}
                     alt={user.name || user.email}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-colors cursor-pointer"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 hover:border-primary-500 dark:hover:border-primary-400 transition-colors cursor-pointer"
                   />
                 </Link>
               )}
@@ -149,7 +162,10 @@ const PageHeader = ({ isAuthenticated, user, onLogout }: PageHeaderProps) => {
               <Link
                 to="/"
                 className="block w-full text-center btn-secondary"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  handleLogoClick();
+                  setMobileMenuOpen(false);
+                }}
               >
                 All Products
               </Link>

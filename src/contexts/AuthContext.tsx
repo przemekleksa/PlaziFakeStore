@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { User, AuthState } from '@/types';
 import { authService, getStoredToken, removeStoredToken } from '@/services';
 
@@ -67,7 +73,7 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 
 // Context type - what we expose to components
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
+  login: (_email: string, _password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -97,7 +103,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const user = await authService.getProfile();
         dispatch({
           type: 'LOGIN_SUCCESS',
-          payload: { user, token }
+          payload: { user, token },
         });
       } catch (error) {
         // Token invalid - remove it
@@ -125,13 +131,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         type: 'LOGIN_SUCCESS',
         payload: {
           user,
-          token: loginResponse.access_token
-        }
+          token: loginResponse.access_token,
+        },
       });
     } catch (error: any) {
       dispatch({
         type: 'LOGIN_FAILURE',
-        payload: error.message || 'Login failed'
+        payload: error.message || 'Login failed',
       });
       throw error; // Re-throw so component can handle the error
     }
@@ -150,11 +156,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     logout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // Hook for using AuthContext

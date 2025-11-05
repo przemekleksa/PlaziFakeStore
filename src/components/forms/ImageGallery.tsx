@@ -1,8 +1,10 @@
+import Image from '@/components/ui/Image';
+
 interface ImageGalleryProps {
   images: string[];
   newImageUrl: string;
-  onImagesChange: (images: string[]) => void;
-  onNewImageUrlChange: (url: string) => void;
+  onImagesChange: (_images: string[]) => void;
+  onNewImageUrlChange: (_url: string) => void;
   required?: boolean;
 }
 
@@ -42,17 +44,18 @@ const ImageGallery = ({
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           {images.map((image, index) => (
             <div key={index} className="relative group">
-              <img
+              <Image
                 src={image}
                 alt={`Product image ${index + 1}`}
                 className="w-full h-32 object-cover rounded-lg border border-gray-300"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
                 {index > 0 && (
                   <button
                     type="button"
                     onClick={() => moveImage(index, index - 1)}
-                    className="p-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="p-1 bg-primary-500 text-white rounded hover:bg-primary-600"
                     title="Move left"
                   >
                     ←
@@ -70,7 +73,7 @@ const ImageGallery = ({
                   <button
                     type="button"
                     onClick={() => moveImage(index, index + 1)}
-                    className="p-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="p-1 bg-primary-500 text-white rounded hover:bg-primary-600"
                     title="Move right"
                   >
                     →
@@ -89,7 +92,7 @@ const ImageGallery = ({
           value={newImageUrl}
           onChange={e => onNewImageUrlChange(e.target.value)}
           placeholder="Enter image URL"
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
         <button
           type="button"

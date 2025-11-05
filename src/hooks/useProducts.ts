@@ -32,8 +32,8 @@ const useCreateProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
-    onError: error => {
-      console.error('Failed to create product:', error);
+    onError: () => {
+      // Error handling is done in the component
     },
   });
 };
@@ -55,8 +55,8 @@ const useUpdateProduct = () => {
       });
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
-    onError: error => {
-      console.error('Failed to update product:', error);
+    onError: () => {
+      // Error handling is done in the component
     },
   });
 };
@@ -72,8 +72,8 @@ const useDeleteProduct = () => {
       });
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
-    onError: error => {
-      console.error('Failed to delete product:', error);
+    onError: () => {
+      // Error handling is done in the component
     },
   });
 };

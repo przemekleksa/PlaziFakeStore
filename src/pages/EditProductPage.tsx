@@ -15,8 +15,6 @@ const EditProductPage = () => {
 
   const handleSubmit = (updateData: any) => {
     if (product) {
-      console.log('Sending update data:', updateData);
-
       updateProduct.mutate(
         {
           id: product.id,
@@ -26,8 +24,7 @@ const EditProductPage = () => {
           onSuccess: () => {
             toast.success(`${product.title} updated successfully!`);
           },
-          onError: error => {
-            console.error('Failed to update product:', error);
+          onError: () => {
             toast.error('Failed to update product. Please try again.');
           },
         }
