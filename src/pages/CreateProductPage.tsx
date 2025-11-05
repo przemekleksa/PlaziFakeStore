@@ -31,11 +31,11 @@ const CreateProductPage = () => {
       <div className="max-w-2xl mx-auto">
         <Breadcrumbs items={breadcrumbs} />
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Create New Product
           </h1>
-          <Link to="/" className="btn-secondary">
+          <Link to="/" className="btn-secondary text-center">
             Back to Products
           </Link>
         </div>

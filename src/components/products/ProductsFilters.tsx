@@ -57,7 +57,13 @@ const ProductsFilters = ({
       <div className="lg:hidden mb-4 shadow-md ">
         <button
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
+          aria-expanded={isOpen}
+          aria-label={
+            isOpen
+              ? 'Close filters and sort options'
+              : 'Open filters and sort options'
+          }
+          className="w-full flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
         >
           <div className="flex items-center gap-2">
             <svg
@@ -95,7 +101,7 @@ const ProductsFilters = ({
 
       {/* Filters Content */}
       <div
-        className={`${isOpen ? 'block' : 'hidden'} lg:block bg-white dark:bg-gray-800 rounded-lg p-6 mb-6 border border-gray-200 dark:border-gray-700 shadow-md`}
+        className={`${isOpen ? 'block' : 'hidden'} lg:block bg-white dark:bg-gray-800 rounded-lg p-6 mb-2 border border-gray-200 dark:border-gray-700 shadow-md`}
       >
         <div className="flex flex-wrap items-end gap-6">
           {/* Price Filter */}
@@ -104,31 +110,42 @@ const ProductsFilters = ({
               Price Range
             </label>
             <div className="flex items-center gap-2">
+              <label htmlFor="price-min" className="sr-only">
+                Minimum price
+              </label>
               <input
+                id="price-min"
                 type="number"
                 placeholder="Min"
                 min="0"
                 value={filters.priceMin}
                 onChange={handlePriceMinChange}
                 onKeyDown={handleKeyDown}
-                className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
+                aria-label="Minimum price"
+                className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <span className="text-gray-500 dark:text-gray-400 text-sm">
                 to
               </span>
+              <label htmlFor="price-max" className="sr-only">
+                Maximum price
+              </label>
               <input
+                id="price-max"
                 type="number"
                 placeholder="Max"
                 min="0"
                 value={filters.priceMax}
                 onChange={handlePriceMaxChange}
                 onKeyDown={handleKeyDown}
-                className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
+                aria-label="Maximum price"
+                className="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               {(filters.priceMin || filters.priceMax) && (
                 <button
                   onClick={clearPriceFilters}
-                  className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2"
+                  aria-label="Clear price filters"
+                  className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
                 >
                   Clear
                 </button>
@@ -138,14 +155,19 @@ const ProductsFilters = ({
 
           {/* Category Filter */}
           <div className="flex-1 min-w-[180px] space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="category-filter"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Category
             </label>
             <div className="flex items-center gap-2">
               <select
+                id="category-filter"
                 value={filters.category}
                 onChange={handleCategoryChange}
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
+                aria-label="Filter by category"
+                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="">All Categories</option>
                 {categories?.map(category => (
@@ -157,7 +179,8 @@ const ProductsFilters = ({
               {filters.category && (
                 <button
                   onClick={clearCategoryFilter}
-                  className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2"
+                  aria-label="Clear category filter"
+                  className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
                 >
                   Clear
                 </button>
@@ -167,13 +190,18 @@ const ProductsFilters = ({
 
           {/* Sort Filter */}
           <div className="flex-1 min-w-[160px] space-y-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label
+              htmlFor="sort-filter"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
               Sort by
             </label>
             <select
+              id="sort-filter"
               value={filters.sortBy}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white"
               onChange={handleSortChange}
+              aria-label="Sort products by"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option value="">Default</option>
               <option value="price-high">Price: High to Low</option>

@@ -11,11 +11,16 @@ const ProductsSearch = ({ value, onChange, onClear }: ProductsSearchProps) => {
 
   return (
     <form className="lg:mb-6 mb-4 shadow-md relative">
+      <label htmlFor="product-search" className="sr-only">
+        Search products
+      </label>
       <input
+        id="product-search"
         type="text"
         placeholder="Search products..."
         value={value}
         onChange={handleChange}
+        aria-label="Search products"
         className="input-field pr-12"
       />
       {value && (

@@ -81,6 +81,7 @@ const CompactSearchFilters = ({
           <button
             type="button"
             onClick={onClearSearch}
+            aria-label="Clear search"
             className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             <svg
@@ -103,6 +104,8 @@ const CompactSearchFilters = ({
       {/* Filters Button */}
       <button
         onClick={handleFiltersToggle}
+        aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
+        aria-expanded={filtersOpen}
         className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 h-10"
       >
         <svg
@@ -125,6 +128,10 @@ const CompactSearchFilters = ({
       <div className="lg:hidden">
         <button
           onClick={handleMobileMenuToggle}
+          aria-label={
+            mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+          }
+          aria-expanded={mobileMenuOpen}
           className="p-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 h-10"
         >
           <svg

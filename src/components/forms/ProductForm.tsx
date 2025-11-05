@@ -64,7 +64,11 @@ const ProductForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6"
+      aria-label={`${mode === 'create' ? 'Create new' : 'Edit'} product form`}
+    >
       <div>
         <label
           htmlFor="title"
@@ -79,8 +83,12 @@ const ProductForm = ({
           onChange={e => setTitle(e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           placeholder="Enter product title"
+          aria-describedby="title-help"
           required
         />
+        <div id="title-help" className="sr-only">
+          Enter a descriptive title for your product
+        </div>
       </div>
 
       <div>
@@ -99,8 +107,12 @@ const ProductForm = ({
           onChange={e => setPrice(Number(e.target.value))}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           placeholder="Enter product price"
+          aria-describedby="price-help"
           required
         />
+        <div id="price-help" className="sr-only">
+          Enter the price in dollars, minimum value is 0
+        </div>
       </div>
 
       <div>

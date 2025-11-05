@@ -9,6 +9,7 @@ import ProductsFilters from '@/components/products/ProductsFilters';
 import CompactSearchFilters from '@/components/products/CompactSearchFilters';
 import ProductsGrid from '@/components/products/ProductsGrid';
 import Pagination from '@/components/ui/Pagination';
+import ConfirmModal from '@/components/ui/confimModal';
 
 const ProductsPage = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -34,7 +35,10 @@ const ProductsPage = () => {
     isLoading,
     error,
     debouncedSearch,
-    handleDelete,
+    deleteModalState,
+    showDeleteModal,
+    hideDeleteModal,
+    handleConfirmDelete,
     handleSearchChange,
     clearSearch,
     handlePageChange,
@@ -49,7 +53,10 @@ const ProductsPage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Normal Header and Search/Filters - always take space */}
       {!isScrolled && (
-        <div ref={headerRef} className="container mx-auto px-4 py-8">
+        <div
+          ref={headerRef}
+          className="container mx-auto px-4 py-8 pb-2 sm:pb-4"
+        >
           <PageHeader
             isAuthenticated={isAuthenticated}
             user={user}
@@ -133,11 +140,11 @@ const ProductsPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
-        <main className="max-w-6xl mx-auto">
+        <main id="main-content" className="max-w-6xl mx-auto" tabIndex={-1}>
           <ProductsGrid
             products={sortedProducts}
             isAuthenticated={isAuthenticated}
-            onDelete={handleDelete}
+            onDelete={showDeleteModal}
             isLoading={isLoading}
             error={error}
             emptyMessage={emptyMessage}
@@ -152,6 +159,17 @@ const ProductsPage = () => {
           )}
         </main>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModalState.isOpen && (
+        <ConfirmModal
+          action={`Are you sure you want to delete "${deleteModalState.productTitle}"?`}
+          accept={handleConfirmDelete}
+          deny={hideDeleteModal}
+          acceptLabel="Delete"
+          denyLabel="Cancel"
+        />
+      )}
     </div>
   );
 };
