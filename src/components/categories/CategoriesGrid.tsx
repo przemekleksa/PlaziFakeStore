@@ -1,5 +1,7 @@
 import { Category } from '@/types';
 import CategoryCard from './CategoryCard';
+import CategoriesGridSkeleton from '@/components/ui/CategoriesGridSkeleton';
+import ErrorFallback from '@/components/ui/ErrorFallback';
 
 interface CategoriesGridProps {
   categories: Category[] | undefined;
@@ -15,23 +17,18 @@ const CategoriesGrid = ({
   emptyMessage = 'No categories available.',
 }: CategoriesGridProps) => {
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div
-          data-testid="loading-spinner"
-          className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"
-        ></div>
-      </div>
-    );
+    return <CategoriesGridSkeleton count={6} />;
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-        <p className="text-red-800 dark:text-red-200">
-          Error loading categories. Please try again later.
-        </p>
-      </div>
+      <ErrorFallback
+        error={error}
+        resetError={undefined}
+        title="Failed to load categories"
+        message="We couldn't load the categories. Please check your connection and try again."
+        queryKey={['categories']}
+      />
     );
   }
 

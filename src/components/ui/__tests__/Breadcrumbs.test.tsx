@@ -17,9 +17,9 @@ describe('Breadcrumbs', () => {
 
     renderWithRouter(<Breadcrumbs items={items} />);
 
-    expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('Products')).toBeInTheDocument();
-    expect(screen.getByText('Current Page')).toBeInTheDocument();
+    expect(screen.getAllByText('Home')).toHaveLength(2); // mobile + desktop
+    expect(screen.getAllByText('Products')).toHaveLength(2); // mobile + desktop
+    expect(screen.getAllByText('Current Page')).toHaveLength(2); // mobile + desktop
   });
 
   it('renders links for non-current items', () => {
@@ -30,11 +30,16 @@ describe('Breadcrumbs', () => {
 
     renderWithRouter(<Breadcrumbs items={items} />);
 
-    const homeLink = screen.getByRole('link', { name: 'Home' });
-    expect(homeLink).toHaveAttribute('href', '/');
+    const homeLinks = screen.getAllByRole('link', { name: 'Home' });
+    expect(homeLinks).toHaveLength(2); // mobile + desktop
+    expect(homeLinks[0]).toHaveAttribute('href', '/');
 
-    // Current item should not be a link
-    expect(screen.getByText('Current Page')).not.toHaveAttribute('href');
+    // Current item should not be a link - check that spans exist instead
+    const currentPageElements = screen.getAllByText('Current Page');
+    expect(currentPageElements).toHaveLength(2); // mobile + desktop
+    currentPageElements.forEach(element => {
+      expect(element.tagName).toBe('SPAN');
+    });
   });
 
   it('renders chevron separators between items', () => {
@@ -82,10 +87,12 @@ describe('Breadcrumbs', () => {
     renderWithRouter(<Breadcrumbs items={items} />);
 
     // Should display full text without truncation
-    expect(screen.getByText('Short title')).toBeInTheDocument();
+    const elements = screen.getAllByText('Short title');
+    expect(elements).toHaveLength(2); // mobile + desktop
 
     // Should still have title attribute
-    const element = screen.getByText('Short title');
-    expect(element).toHaveAttribute('title', 'Short title');
+    elements.forEach(element => {
+      expect(element).toHaveAttribute('title', 'Short title');
+    });
   });
 });

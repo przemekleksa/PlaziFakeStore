@@ -32,6 +32,9 @@ const useCreateProduct = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
+    onError: error => {
+      console.error('Failed to create product:', error);
+    },
   });
 };
 
@@ -52,6 +55,9 @@ const useUpdateProduct = () => {
       });
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
+    onError: error => {
+      console.error('Failed to update product:', error);
+    },
   });
 };
 
@@ -65,6 +71,9 @@ const useDeleteProduct = () => {
         queryKey: ['product', deletedId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+    onError: error => {
+      console.error('Failed to delete product:', error);
     },
   });
 };

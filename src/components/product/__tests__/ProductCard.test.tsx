@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { screen, fireEvent } from '@testing-library/react';
+import { renderWithProviders } from '@/__tests__/test-utils';
 import ProductCard from '../ProductCard';
 import { Product } from '@/types';
 
@@ -22,13 +22,9 @@ const mockProduct: Product = {
   updatedAt: '2023-01-01T00:00:00Z',
 };
 
-const renderWithRouter = (component: React.ReactElement) => {
-  return render(<BrowserRouter>{component}</BrowserRouter>);
-};
-
 describe('ProductCard', () => {
   it('renders product information correctly', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+    renderWithProviders(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('Test Product')).toBeInTheDocument();
     expect(screen.getByText('Test description')).toBeInTheDocument();
@@ -39,7 +35,7 @@ describe('ProductCard', () => {
   it('shows edit and delete buttons when authenticated', () => {
     const mockOnDelete = vi.fn();
 
-    renderWithRouter(
+    renderWithProviders(
       <ProductCard
         product={mockProduct}
         isAuthenticated={true}
@@ -52,7 +48,7 @@ describe('ProductCard', () => {
   });
 
   it('hides edit and delete buttons when not authenticated', () => {
-    renderWithRouter(
+    renderWithProviders(
       <ProductCard product={mockProduct} isAuthenticated={false} />
     );
 
@@ -63,7 +59,7 @@ describe('ProductCard', () => {
   it('calls onDelete when delete button is clicked', () => {
     const mockOnDelete = vi.fn();
 
-    renderWithRouter(
+    renderWithProviders(
       <ProductCard
         product={mockProduct}
         isAuthenticated={true}
@@ -78,7 +74,7 @@ describe('ProductCard', () => {
   });
 
   it('has correct edit link', () => {
-    renderWithRouter(
+    renderWithProviders(
       <ProductCard product={mockProduct} isAuthenticated={true} />
     );
 
@@ -87,7 +83,7 @@ describe('ProductCard', () => {
   });
 
   it('has correct product detail links', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+    renderWithProviders(<ProductCard product={mockProduct} />);
 
     const titleLink = screen.getByText('Test Product').closest('a');
     expect(titleLink).toHaveAttribute('href', '/products/1');

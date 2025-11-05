@@ -1,5 +1,7 @@
 import { Product } from '@/types';
 import ProductCard from '@/components/product/ProductCard';
+import ProductsGridSkeleton from '@/components/ui/ProductsGridSkeleton';
+import ErrorFallback from '@/components/ui/ErrorFallback';
 
 interface ProductsGridProps {
   products: Product[] | undefined;
@@ -19,23 +21,18 @@ const ProductsGrid = ({
   emptyMessage = 'No products available.',
 }: ProductsGridProps) => {
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div
-          data-testid="loading-spinner"
-          className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"
-        ></div>
-      </div>
-    );
+    return <ProductsGridSkeleton count={12} />;
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
-        <p className="text-red-800 dark:text-red-200">
-          Error loading products. Please try again later.
-        </p>
-      </div>
+      <ErrorFallback
+        error={error}
+        resetError={undefined}
+        title="Failed to load products"
+        message="We couldn't load the products. Please check your connection and try again."
+        queryKey={['products']}
+      />
     );
   }
 

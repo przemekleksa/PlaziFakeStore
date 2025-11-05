@@ -26,8 +26,7 @@ describe('PageHeader', () => {
       <PageHeader isAuthenticated={false} user={null} onLogout={vi.fn()} />
     );
 
-    expect(screen.getByText('Platzi')).toBeInTheDocument();
-    expect(screen.getByText('Fake Store')).toBeInTheDocument();
+    expect(screen.getByText('Platzi Fake Store')).toBeInTheDocument();
     expect(screen.getByText('Discover amazing products')).toBeInTheDocument();
     expect(screen.getByText('Categories')).toBeInTheDocument();
   });

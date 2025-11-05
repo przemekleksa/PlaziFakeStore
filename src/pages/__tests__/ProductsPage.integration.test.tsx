@@ -167,7 +167,8 @@ describe('ProductsPage Integration', () => {
     const TestWrapper = createTestWrapper();
     render(<ProductsPage />, { wrapper: TestWrapper });
 
-    expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
+    // Check for skeleton loading state instead of spinner
+    expect(screen.getByTestId('products-grid-skeleton')).toBeInTheDocument();
 
     resolveProducts!([
       createMockProduct({ id: 1, title: 'Laptop', price: 1000 }),
@@ -186,7 +187,7 @@ describe('ProductsPage Integration', () => {
     render(<ProductsPage />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText(/error loading products/i)).toBeInTheDocument();
+      expect(screen.getByText('Failed to load products')).toBeInTheDocument();
     });
   });
 

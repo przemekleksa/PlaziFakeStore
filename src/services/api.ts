@@ -1,5 +1,10 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 import { ApiError } from '@/types';
+import { getErrorMessage } from '@/utils/errorHandling';
 
 // API base configuration
 const API_BASE_URL = 'https://api.escuelajs.co/api/v1';
@@ -29,14 +34,14 @@ const removeStoredToken = (): void => {
 
 // Request interceptor - Add auth token to requests
 apiClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = getStoredToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
   }
 );
@@ -46,19 +51,27 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
+  error => {
     // Handle 401 Unauthorized - token expired
     if (error.response?.status === 401) {
       removeStoredToken();
-      // Redirect to login page
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
 
-    // Transform error to our ApiError format
+    if (!error.response) {
+      const networkError: ApiError = {
+        message: 'Network error. Please check your internet connection.',
+        statusCode: 0,
+        error: 'NETWORK_ERROR',
+      };
+      return Promise.reject(networkError);
+    }
     const apiError: ApiError = {
-      message: error.response?.data?.message || error.message || 'An error occurred',
+      message: getErrorMessage(error),
       statusCode: error.response?.status || 500,
-      error: error.response?.data?.error || 'Unknown error',
+      error: error.response?.data?.error || error.code || 'Unknown error',
     };
 
     return Promise.reject(apiError);
@@ -68,28 +81,40 @@ apiClient.interceptors.response.use(
 // API client methods
 export const api = {
   // GET request
-  get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.get(url, config).then((response) => response.data);
+  get: <T>(url: string, config?: InternalAxiosRequestConfig): Promise<T> => {
+    return apiClient.get(url, config).then(response => response.data);
   },
 
   // POST request
-  post: <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.post(url, data, config).then((response) => response.data);
+  post: <T>(
+    url: string,
+    data?: any,
+    config?: InternalAxiosRequestConfig
+  ): Promise<T> => {
+    return apiClient.post(url, data, config).then(response => response.data);
   },
 
   // PUT request
-  put: <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.put(url, data, config).then((response) => response.data);
+  put: <T>(
+    url: string,
+    data?: any,
+    config?: InternalAxiosRequestConfig
+  ): Promise<T> => {
+    return apiClient.put(url, data, config).then(response => response.data);
   },
 
   // PATCH request
-  patch: <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.patch(url, data, config).then((response) => response.data);
+  patch: <T>(
+    url: string,
+    data?: any,
+    config?: InternalAxiosRequestConfig
+  ): Promise<T> => {
+    return apiClient.patch(url, data, config).then(response => response.data);
   },
 
   // DELETE request
-  delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.delete(url, config).then((response) => response.data);
+  delete: <T>(url: string, config?: InternalAxiosRequestConfig): Promise<T> => {
+    return apiClient.delete(url, config).then(response => response.data);
   },
 };
 
