@@ -174,7 +174,7 @@ const ProductDetailPage = () => {
                   </p>
                 </div>
 
-                <div className="text-3xl font-bold text-primary-700">
+                <div className="text-4xl font-bold text-green-600">
                   ${product.price}
                 </div>
 

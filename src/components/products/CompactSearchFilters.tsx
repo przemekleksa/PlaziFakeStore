@@ -99,7 +99,7 @@ const CompactSearchFilters = ({
       {/* Logo */}
       <Link to="/" className="flex-shrink-0" onClick={handleLogoClick}>
         <img
-          src="/assets/images/platziStoreLogo.png"
+          src="/assets/images/PFS.webp"
           alt="Platzi Store"
           className="w-10 h-10 object-contain hover:scale-105 transition-transform duration-200"
         />

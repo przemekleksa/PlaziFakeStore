@@ -1,6 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { authService } from '../auth.service';
-import { api, setStoredToken, removeStoredToken } from '../api';
+import {
+  api,
+  setStoredToken,
+  removeStoredToken,
+  setStoredRefreshToken,
+} from '../api';
 
 vi.mock('../api', () => ({
   api: {
@@ -9,11 +14,13 @@ vi.mock('../api', () => ({
   },
   setStoredToken: vi.fn(),
   removeStoredToken: vi.fn(),
+  setStoredRefreshToken: vi.fn(),
 }));
 
 const mockApi = vi.mocked(api);
 const mockSetStoredToken = vi.mocked(setStoredToken);
 const mockRemoveStoredToken = vi.mocked(removeStoredToken);
+const mockSetStoredRefreshToken = vi.mocked(setStoredRefreshToken);
 
 describe('authService', () => {
   beforeEach(() => {
@@ -37,6 +44,7 @@ describe('authService', () => {
 
       expect(mockApi.post).toHaveBeenCalledWith('/auth/login', mockCredentials);
       expect(mockSetStoredToken).toHaveBeenCalledWith('mock-token');
+      expect(mockSetStoredRefreshToken).toHaveBeenCalledWith('refresh-token');
       expect(result).toEqual(mockResponse);
     });
 
@@ -53,6 +61,7 @@ describe('authService', () => {
 
       expect(mockApi.post).toHaveBeenCalledWith('/auth/login', mockCredentials);
       expect(mockSetStoredToken).not.toHaveBeenCalled();
+      expect(mockSetStoredRefreshToken).toHaveBeenCalledWith('refresh-token');
       expect(result).toEqual(mockResponse);
     });
 

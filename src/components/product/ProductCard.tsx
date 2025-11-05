@@ -59,7 +59,7 @@ const ProductCard = memo(
           </p>
 
           <div className="flex items-center justify-between mt-auto">
-            <span className="text-xl font-bold text-primary-700">
+            <span className="text-2xl font-bold text-green-600">
               ${product.price}
             </span>
 

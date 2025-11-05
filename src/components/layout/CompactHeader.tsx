@@ -19,7 +19,7 @@ const CompactHeader = ({
       {/* Logo */}
       <Link to="/" className="flex items-center gap-3">
         <img
-          src="/assets/images/platziStoreLogo.png"
+          src="/assets/images/PFS.webp"
           alt="Platzi Store"
           className="w-9 h-9 object-contain hover:scale-105 transition-transform duration-200"
         />
