@@ -34,7 +34,6 @@ describe('Breadcrumbs', () => {
     expect(homeLinks).toHaveLength(2); // mobile + desktop
     expect(homeLinks[0]).toHaveAttribute('href', '/');
 
-    // Current item should not be a link - check that spans exist instead
     const currentPageElements = screen.getAllByText('Current Page');
     expect(currentPageElements).toHaveLength(2); // mobile + desktop
     currentPageElements.forEach(element => {
@@ -51,7 +50,6 @@ describe('Breadcrumbs', () => {
 
     const { container } = renderWithRouter(<Breadcrumbs items={items} />);
 
-    // Should have 2 chevron SVG elements (between 3 items)
     const chevrons = container.querySelectorAll('svg');
     expect(chevrons).toHaveLength(2);
   });
@@ -67,10 +65,8 @@ describe('Breadcrumbs', () => {
 
     renderWithRouter(<Breadcrumbs items={items} />);
 
-    // Should display truncated text
     expect(screen.getByText('This is a very long ...')).toBeInTheDocument();
 
-    // Should have full text in title attribute for tooltip
     const truncatedElement = screen.getByText('This is a very long ...');
     expect(truncatedElement).toHaveAttribute(
       'title',
@@ -86,11 +82,9 @@ describe('Breadcrumbs', () => {
 
     renderWithRouter(<Breadcrumbs items={items} />);
 
-    // Should display full text without truncation
     const elements = screen.getAllByText('Short title');
-    expect(elements).toHaveLength(2); // mobile + desktop
+    expect(elements).toHaveLength(2);
 
-    // Should still have title attribute
     elements.forEach(element => {
       expect(element).toHaveAttribute('title', 'Short title');
     });

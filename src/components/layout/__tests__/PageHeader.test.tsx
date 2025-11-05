@@ -13,10 +13,7 @@ const mockUser: User = {
   updatedAt: '2023-01-01T00:00:00Z',
 };
 
-const renderWithRouter = (
-  component: React.ReactElement
-  // initialEntries = ['/']
-) => {
+const renderWithRouter = (component: React.ReactElement) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
 };
 

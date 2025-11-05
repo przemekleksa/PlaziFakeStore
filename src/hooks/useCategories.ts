@@ -5,7 +5,7 @@ const useCategories = () => {
   return useQuery({
     queryKey: ['categories'],
     queryFn: () => categoriesService.getCategories(),
-    staleTime: 20 * 60 * 1000, // 20 minutes
+    staleTime: 60 * 1000,
   });
 };
 
@@ -15,7 +15,5 @@ const useCategory = (id: number) => {
     queryFn: () => categoriesService.getCategory(id),
   });
 };
-
-// CRUD for categories?? TODO
 
 export { useCategories, useCategory };

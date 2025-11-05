@@ -71,7 +71,6 @@ describe('CompactSearchFilters', () => {
       <CompactSearchFilters {...defaultProps} searchValue="laptop" />
     );
 
-    // Look for X icon in clear button
     const clearButton = container.querySelector(
       'svg path[d*="M6 18L18 6M6 6l12 12"]'
     );

@@ -1,4 +1,3 @@
-// Base API response types
 export interface ApiResponse<T> {
   data: T;
   message?: string;
@@ -10,8 +9,6 @@ export interface ApiError {
   statusCode: number;
   error: string;
 }
-
-// Pagination types
 export interface PaginationParams {
   limit?: number;
   offset?: number;
@@ -23,8 +20,6 @@ export interface PaginatedResponse<T> {
   limit: number;
   offset: number;
 }
-
-// Filter types for products
 export interface ProductFilters extends PaginationParams {
   title?: string;
   price?: number;
@@ -33,8 +28,6 @@ export interface ProductFilters extends PaginationParams {
   categoryId?: number;
   categorySlug?: string;
 }
-
-// Sort options
 export type SortOrder = 'asc' | 'desc';
 export type ProductSortField = 'title' | 'price' | 'creationAt' | 'updatedAt';
 

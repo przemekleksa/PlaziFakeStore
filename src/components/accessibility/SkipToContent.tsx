@@ -5,7 +5,6 @@ const SkipToContent = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Show skip link on Tab key press
       if (event.key === 'Tab' && !event.shiftKey) {
         const activeElement = document.activeElement;
         if (

@@ -15,7 +15,6 @@ export const useProductForm = ({
   const [images, setImages] = useState<string[]>([]);
   const [newImageUrl, setNewImageUrl] = useState('');
 
-  // Initialize form with product data (for edit mode)
   useEffect(() => {
     if (initialProduct) {
       setTitle(initialProduct.title);
@@ -26,7 +25,6 @@ export const useProductForm = ({
     }
   }, [initialProduct]);
 
-  // Reset form
   const resetForm = () => {
     setTitle('');
     setPrice(0);
@@ -36,7 +34,6 @@ export const useProductForm = ({
     setNewImageUrl('');
   };
 
-  // Get form data
   const getFormData = () => ({
     title,
     price,
@@ -45,7 +42,6 @@ export const useProductForm = ({
     images,
   });
 
-  // Get changed fields (for partial updates)
   const getChangedFields = () => {
     if (!initialProduct) return getFormData();
 
@@ -61,8 +57,6 @@ export const useProductForm = ({
 
     return changes;
   };
-
-  // Validation
   const validate = () => {
     const errors: string[] = [];
 
@@ -76,7 +70,6 @@ export const useProductForm = ({
   };
 
   return {
-    // Form state
     title,
     setTitle,
     price,
@@ -90,7 +83,6 @@ export const useProductForm = ({
     newImageUrl,
     setNewImageUrl,
 
-    // Form actions
     resetForm,
     getFormData,
     getChangedFields,

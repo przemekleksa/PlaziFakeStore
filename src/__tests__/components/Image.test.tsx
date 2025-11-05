@@ -14,7 +14,6 @@ describe('Image Component', () => {
 
     const img = screen.getByAltText('Test image');
 
-    // Simulate image load error
     fireEvent.error(img);
 
     await waitFor(() => {
@@ -33,7 +32,6 @@ describe('Image Component', () => {
 
     const img = screen.getByAltText('Test image');
 
-    // Simulate image load error
     fireEvent.error(img);
 
     await waitFor(() => {
@@ -52,7 +50,6 @@ describe('Image Component', () => {
 
     const img = screen.getByAltText('Test image');
 
-    // Simulate image load error
     fireEvent.error(img);
 
     await waitFor(() => {

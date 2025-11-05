@@ -28,14 +28,12 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 10 * 1000, // 10 seconds cache
       retry: (failureCount, error: any) => {
-        // Don't retry on 404s or 401s
         if (
           error?.response?.status === 404 ||
           error?.response?.status === 401
         ) {
           return false;
         }
-        // Retry up to 2 times for other errors
         return failureCount < 2;
       },
       refetchOnWindowFocus: false,

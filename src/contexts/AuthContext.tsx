@@ -8,7 +8,6 @@ import {
 import { User, AuthState } from '@/types';
 import { authService, getStoredToken, removeStoredToken } from '@/services';
 
-// Actions dla reducer
 type AuthAction =
   | { type: 'LOGIN_START' }
   | { type: 'LOGIN_SUCCESS'; payload: { user: User; token: string } }
@@ -16,15 +15,12 @@ type AuthAction =
   | { type: 'LOGOUT' }
   | { type: 'SET_LOADING'; payload: boolean };
 
-// Initial state
 const initialState: AuthState = {
   user: null,
   token: null,
   isAuthenticated: false,
-  isLoading: true, // true at start, because we check if user is already logged in
+  isLoading: true,
 };
-
-// Reducer - manages state changes
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN_START':
@@ -71,16 +67,12 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-// Context type - what we expose to components
 interface AuthContextType extends AuthState {
   login: (_email: string, _password: string) => Promise<void>;
   logout: () => void;
 }
 
-// Create Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Provider component - wraps the entire application
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -88,7 +80,6 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Check if user is already logged in (on app start)
   useEffect(() => {
     const checkAuthStatus = async () => {
       const token = getStoredToken();
@@ -99,14 +90,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
 
       try {
-        // Check if token is valid and get user data
         const user = await authService.getProfile();
         dispatch({
           type: 'LOGIN_SUCCESS',
           payload: { user, token },
         });
       } catch (error) {
-        // Token invalid - remove it
         removeStoredToken();
         dispatch({ type: 'LOGIN_FAILURE', payload: 'Token expired' });
       }
@@ -115,18 +104,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     checkAuthStatus();
   }, []);
 
-  // Login function
   const login = async (email: string, password: string): Promise<void> => {
     dispatch({ type: 'LOGIN_START' });
 
     try {
-      // Call login API
       const loginResponse = await authService.login({ email, password });
-
-      // Get user data
       const user = await authService.getProfile();
 
-      // Save in state
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
@@ -139,17 +123,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         type: 'LOGIN_FAILURE',
         payload: error.message || 'Login failed',
       });
-      throw error; // Re-throw so component can handle the error
+      throw error;
     }
   };
 
-  // Logout function
   const logout = (): void => {
-    authService.logout(); // Removes token from localStorage
+    authService.logout();
     dispatch({ type: 'LOGOUT' });
   };
-
-  // Value passed to components
   const value: AuthContextType = {
     ...state,
     login,
@@ -159,7 +140,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Hook for using AuthContext
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {

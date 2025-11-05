@@ -20,7 +20,6 @@ const ProductDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const { user, logout, isAuthenticated } = useAuth();
 
-  // Always go back to products page
   const backUrl = '/';
 
   const { data: product, isLoading, isError } = useProduct(id);
@@ -107,7 +106,6 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
       <div className="container mx-auto px-4 pt-8 pb-4">
         <PageHeader
           isAuthenticated={isAuthenticated}
@@ -116,14 +114,10 @@ const ProductDetailPage = () => {
         />
       </div>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 pb-8">
         <main id="main-content" className="max-w-4xl mx-auto" tabIndex={-1}>
           <Breadcrumbs items={breadcrumbs} />
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-            {/* <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-            Product Details
-          </h1> */}
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Link to={backUrl} className="btn-secondary text-center">
                 Back to Products
@@ -132,7 +126,6 @@ const ProductDetailPage = () => {
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Image Gallery */}
               <div className="space-y-4">
                 <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
                   <Image
@@ -163,7 +156,6 @@ const ProductDetailPage = () => {
                 </div>
               </div>
 
-              {/* Product Info */}
               <div className="space-y-6">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">

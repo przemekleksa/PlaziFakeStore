@@ -15,7 +15,6 @@ export const useBreadcrumbs = ({
   const location = useLocation();
 
   const breadcrumbs = useMemo((): BreadcrumbItem[] => {
-    // If custom items are provided, use them
     if (customItems) {
       return customItems;
     }
@@ -29,15 +28,12 @@ export const useBreadcrumbs = ({
 
     const path = location.pathname;
 
-    // Products list page
     if (path === '/') {
       items[0].current = true;
       return items;
     }
 
-    // Product detail or edit page
     if (path.startsWith('/products/') && product) {
-      // Add category if available
       if (product.category) {
         items.push({
           label: product.category.name,
@@ -45,7 +41,6 @@ export const useBreadcrumbs = ({
         });
       }
 
-      // Add product title
       const isEditPage = path.endsWith('/edit');
       items.push({
         label: product.title,
@@ -53,7 +48,6 @@ export const useBreadcrumbs = ({
         current: !isEditPage,
       });
 
-      // Add "Edit" if on edit page
       if (isEditPage) {
         items.push({
           label: 'Edit',
@@ -64,7 +58,6 @@ export const useBreadcrumbs = ({
       return items;
     }
 
-    // Create product page
     if (path === '/products/new') {
       items.push({
         label: 'Create Product',
@@ -73,7 +66,6 @@ export const useBreadcrumbs = ({
       return items;
     }
 
-    // Categories page
     if (path === '/categories') {
       items.push({
         label: 'Categories',
@@ -82,14 +74,11 @@ export const useBreadcrumbs = ({
       return items;
     }
 
-    // Category products page
     if (path.startsWith('/categories/')) {
       items.push({
         label: 'Categories',
         href: '/categories',
       });
-
-      // Extract category name from URL or use generic label
 
       items.push({
         label: 'Category Products', // Could be enhanced with actual category name
@@ -98,7 +87,6 @@ export const useBreadcrumbs = ({
       return items;
     }
 
-    // Dashboard
     if (path === '/dashboard') {
       items.push({
         label: 'Dashboard',
@@ -107,7 +95,6 @@ export const useBreadcrumbs = ({
       return items;
     }
 
-    // Default: just show current page as active
     items[0].current = true;
     return items;
   }, [location.pathname, product, customItems]);
