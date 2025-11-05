@@ -13,6 +13,7 @@ export function useUrlParams<T extends Record<string, any>>(
   const { defaultValues = {}, replace = true, sessionStorageKey } = options;
   const [urlParams, setUrlParams] = useSearchParams();
   const [isInitialized, setIsInitialized] = useState(false);
+  const [lastUrlState, setLastUrlState] = useState<string>('');
 
   // Check if params have non-default values
   const hasNonDefaultValues = useCallback(
@@ -74,8 +75,7 @@ export function useUrlParams<T extends Record<string, any>>(
         }
         return validatedParams;
       }
-    } catch (error) {
-      console.warn('Failed to parse sessionStorage data:', error);
+    } catch {
       // Clear corrupted data
       sessionStorage.removeItem(sessionStorageKey);
     }
@@ -90,11 +90,42 @@ export function useUrlParams<T extends Record<string, any>>(
 
       try {
         sessionStorage.setItem(sessionStorageKey, JSON.stringify(params));
-      } catch (error) {
-        console.warn('Failed to save to sessionStorage:', error);
+      } catch {
+        // Silently fail if sessionStorage is not available
       }
     },
     [sessionStorageKey]
+  );
+
+  // Clear sessionStorage (useful for reset functionality)
+  const clearSessionStorage = useCallback(() => {
+    if (sessionStorageKey) {
+      sessionStorage.removeItem(sessionStorageKey);
+    }
+  }, [sessionStorageKey]);
+
+  // Update URL from params object
+  const updateUrlFromParams = useCallback(
+    (params: T) => {
+      const searchParams = new URLSearchParams();
+
+      for (const [key, value] of Object.entries(params)) {
+        const defaultValue = defaultValues[key];
+
+        // Only add to URL if different from default
+        if (
+          value !== defaultValue &&
+          value !== '' &&
+          value !== null &&
+          value !== undefined
+        ) {
+          searchParams.set(key, String(value));
+        }
+      }
+
+      setUrlParams(searchParams, { replace });
+    },
+    [defaultValues, setUrlParams, replace]
   );
 
   // Initialize params with hybrid logic: URL > sessionStorage > defaults
@@ -124,32 +155,9 @@ export function useUrlParams<T extends Record<string, any>>(
     hasNonDefaultValues,
     saveToSessionStorage,
     loadFromSessionStorage,
+    updateUrlFromParams,
     defaultValues,
   ]);
-
-  // Update URL from params object
-  const updateUrlFromParams = useCallback(
-    (params: T) => {
-      const searchParams = new URLSearchParams();
-
-      for (const [key, value] of Object.entries(params)) {
-        const defaultValue = defaultValues[key];
-
-        // Only add to URL if different from default
-        if (
-          value !== defaultValue &&
-          value !== '' &&
-          value !== null &&
-          value !== undefined
-        ) {
-          searchParams.set(key, String(value));
-        }
-      }
-
-      setUrlParams(searchParams, { replace });
-    },
-    [defaultValues, setUrlParams, replace]
-  );
 
   const [params, setParams] = useState<T>(() => {
     // Initialize with defaults first, will be updated in useEffect
@@ -162,8 +170,78 @@ export function useUrlParams<T extends Record<string, any>>(
   useEffect(() => {
     const initialParams = initializeParams();
     setParams(initialParams);
+    setLastUrlState(urlParams.toString());
     setIsInitialized(true);
   }, []); // Only run on mount
+
+  // Detect URL changes and sync with sessionStorage
+  useEffect(() => {
+    if (!isInitialized) return;
+
+    const currentUrlState = urlParams.toString();
+
+    // If URL changed externally (user edited URL, back button, etc.)
+    if (currentUrlState !== lastUrlState) {
+      const urlParsedParams = parseUrlParams();
+
+      // If URL is now empty/default, clear sessionStorage
+      if (!hasNonDefaultValues(urlParsedParams)) {
+        clearSessionStorage();
+      } else {
+        // URL has filters, save to sessionStorage
+        saveToSessionStorage(urlParsedParams);
+      }
+
+      setParams(urlParsedParams);
+      setLastUrlState(currentUrlState);
+    }
+  }, [
+    urlParams,
+    isInitialized,
+    lastUrlState,
+    parseUrlParams,
+    hasNonDefaultValues,
+    clearSessionStorage,
+    saveToSessionStorage,
+  ]);
+
+  // Listen for sessionStorage changes (from other components/contexts)
+  useEffect(() => {
+    if (!isInitialized || !sessionStorageKey) return;
+
+    const handleStorageChange = () => {
+      const sessionParams = loadFromSessionStorage();
+
+      // If sessionStorage was cleared, reset to defaults
+      if (!sessionParams || !hasNonDefaultValues(sessionParams)) {
+        const defaultParams = Object.fromEntries(
+          Object.entries(defaultValues).map(([key, value]) => [key, value])
+        ) as T;
+
+        setParams(defaultParams);
+        updateUrlFromParams(defaultParams);
+        setLastUrlState('');
+      }
+    };
+
+    // Listen for storage events (works across tabs/windows)
+    window.addEventListener('storage', handleStorageChange);
+
+    // Custom event for same-tab sessionStorage changes
+    window.addEventListener('sessionStorageChange', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('sessionStorageChange', handleStorageChange);
+    };
+  }, [
+    isInitialized,
+    sessionStorageKey,
+    loadFromSessionStorage,
+    hasNonDefaultValues,
+    defaultValues,
+    updateUrlFromParams,
+  ]);
 
   // Update both URL and sessionStorage when params change
   const updateParams = useCallback(
@@ -176,18 +254,32 @@ export function useUrlParams<T extends Record<string, any>>(
       // Update URL
       updateUrlFromParams(updatedParams);
 
+      // Update last URL state to prevent sync loop
+      const searchParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(updatedParams)) {
+        const defaultValue = defaultValues[key];
+        if (
+          value !== defaultValue &&
+          value !== '' &&
+          value !== null &&
+          value !== undefined
+        ) {
+          searchParams.set(key, String(value));
+        }
+      }
+      setLastUrlState(searchParams.toString());
+
       // Update sessionStorage
       saveToSessionStorage(updatedParams);
     },
-    [params, isInitialized, updateUrlFromParams, saveToSessionStorage]
+    [
+      params,
+      isInitialized,
+      updateUrlFromParams,
+      saveToSessionStorage,
+      defaultValues,
+    ]
   );
-
-  // Clear sessionStorage (useful for reset functionality)
-  const clearSessionStorage = useCallback(() => {
-    if (sessionStorageKey) {
-      sessionStorage.removeItem(sessionStorageKey);
-    }
-  }, [sessionStorageKey]);
 
   return {
     params,

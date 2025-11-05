@@ -1,3 +1,4 @@
+import { FormEvent } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 import { useProductForm } from '@/hooks/useProductForm';
 import { Product } from '@/types';
@@ -7,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface ProductFormProps {
   initialProduct?: Product;
-  onSubmit: (data: any) => void;
+  onSubmit: (_data: any) => void;
   submitLabel: string;
   isSubmitting?: boolean;
   mode: 'create' | 'edit';
@@ -41,7 +42,7 @@ const ProductForm = ({
     validate,
   } = useProductForm({ initialProduct });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const errors = validate();
@@ -81,7 +82,7 @@ const ProductForm = ({
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           placeholder="Enter product title"
           aria-describedby="title-help"
           required
@@ -105,7 +106,7 @@ const ProductForm = ({
           min="0"
           value={price}
           onChange={e => setPrice(Number(e.target.value))}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           placeholder="Enter product price"
           aria-describedby="price-help"
           required
@@ -127,7 +128,7 @@ const ProductForm = ({
           rows={6}
           value={description}
           onChange={e => setDescription(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-vertical"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-vertical"
           placeholder="Enter product description"
           required
         />
@@ -145,7 +146,7 @@ const ProductForm = ({
             id="category"
             value={categoryId}
             onChange={e => setCategoryId(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             required
             disabled={categoriesLoading}
           >

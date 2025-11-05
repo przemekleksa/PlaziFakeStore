@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCategories } from '@/hooks/useCategories';
 import { useProductsLogic } from '@/hooks/useProductsLogic';
 import { useScrollShrink } from '../hooks/useScrollShrink';
+
 import PageHeader from '@/components/layout/PageHeader';
 import ProductsSearch from '@/components/products/ProductsSearch';
 import ProductsFilters from '@/components/products/ProductsFilters';
@@ -41,6 +42,7 @@ const ProductsPage = () => {
     handleConfirmDelete,
     handleSearchChange,
     clearSearch,
+
     handlePageChange,
     handleFiltersChange,
   } = useProductsLogic();

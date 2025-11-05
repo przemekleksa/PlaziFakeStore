@@ -39,6 +39,7 @@ const DashboardPage = () => {
                   src={user.avatar}
                   alt={user.name || user.email}
                   className="w-32 h-32 rounded-full object-cover border-4 border-gray-300 dark:border-gray-600 shadow-lg"
+                  loading="lazy"
                 />
               ) : (
                 <div className="w-32 h-32 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center shadow-lg">

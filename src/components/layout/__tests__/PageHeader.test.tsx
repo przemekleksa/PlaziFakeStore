@@ -14,8 +14,8 @@ const mockUser: User = {
 };
 
 const renderWithRouter = (
-  component: React.ReactElement,
-  initialEntries = ['/']
+  component: React.ReactElement
+  // initialEntries = ['/']
 ) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
 };

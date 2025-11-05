@@ -44,6 +44,7 @@ export const handleApiError = (error: unknown, context?: string) => {
   const message = getErrorMessage(error);
   const contextMessage = context ? `${context}: ${message}` : message;
 
+  // Log error for debugging
   console.error('API Error:', error);
   toast.error(contextMessage);
 

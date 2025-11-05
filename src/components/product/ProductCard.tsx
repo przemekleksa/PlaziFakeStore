@@ -2,11 +2,12 @@ import { Product } from '@/types';
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { usePrefetch } from '@/hooks/usePrefetch';
+import Image from '@/components/ui/Image';
 
 interface ProductCardProps {
   product: Product;
   isAuthenticated?: boolean;
-  onDelete?: (id: number) => void;
+  onDelete?: (_id: number) => void;
 }
 
 const ProductCard = memo(
@@ -31,11 +32,12 @@ const ProductCard = memo(
           onMouseEnter={handleMouseEnter}
           onFocus={handleFocus}
         >
-          <div className="h-64 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-            <img
+          <div className="relative h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            <Image
               src={product.images[0]}
               alt={product.title}
               className="h-full w-full object-cover hover:scale-105 transition-transform duration-200"
+              loading="lazy"
             />
           </div>
         </Link>

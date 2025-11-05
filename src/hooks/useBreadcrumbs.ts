@@ -90,7 +90,7 @@ export const useBreadcrumbs = ({
       });
 
       // Extract category name from URL or use generic label
-      const categoryId = path.split('/')[2];
+
       items.push({
         label: 'Category Products', // Could be enhanced with actual category name
         current: true,

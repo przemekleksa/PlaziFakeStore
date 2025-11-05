@@ -19,23 +19,39 @@ A modern React application for managing products using the Platzi Fake Store API
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Environment Variables
+
+The application uses the following environment variables:
+
+```bash
+# API Configuration
+VITE_API_BASE_URL=https://api.escuelajs.co/api/v1
+
+# Development
+VITE_DEV_TOOLS=true
+```
+
+Create a `.env.local` file in the root directory for local development.
 
 ## Available Scripts
 
@@ -66,9 +82,17 @@ src/
 └── __tests__/          # Test files
 ```
 
+## Documentation
+
+- 🧩 [Component Documentation](./docs/COMPONENTS.md) - Component usage and props
+- 🏗️ [Architecture Documentation](./docs/ARCHITECTURE.md) - System design and patterns
+
 ## API
 
-This application uses the [Platzi Fake Store API](https://fakeapi.platzi.com/en/rest/swagger) for product data.
+This application uses the [Platzi Fake Store API](https://fakeapi.platzi.com/) for product data.
+
+- 📚 [API Documentation](https://fakeapi.platzi.com/en/rest/swagger) - Complete API reference
+- 🔗 [API Base URL](https://api.escuelajs.co/api/v1) - Live API endpoint
 
 ## Technologies Used
 

@@ -194,8 +194,7 @@ export const useProductsLogic = () => {
           );
           hideDeleteModal();
         },
-        onError: error => {
-          console.error('Failed to delete product:', error);
+        onError: () => {
           toast.error('Failed to delete product. Please try again.');
           hideDeleteModal();
         },
@@ -276,6 +275,7 @@ export const useProductsLogic = () => {
     handleSearchChange,
     clearSearch,
     clearAllFilters,
+
     handlePageChange,
     handleFiltersChange,
   };

@@ -40,9 +40,11 @@ const FocusManager = ({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!trapFocus || event.key !== 'Tab' || !containerRef.current) return;
 
-      const focusableElements = containerRef.current.querySelectorAll(
-        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      ) as NodeListOf<HTMLElement>;
+      const focusableElements = Array.from(
+        containerRef.current.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ) as HTMLElement[];
 
       const firstElement = focusableElements[0];
       const lastElement = focusableElements[focusableElements.length - 1];

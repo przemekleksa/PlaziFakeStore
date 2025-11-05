@@ -1,11 +1,13 @@
+import { ChangeEvent } from 'react';
+
 interface ProductsSearchProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (_value: string) => void;
   onClear: () => void;
 }
 
 const ProductsSearch = ({ value, onChange, onClear }: ProductsSearchProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
 

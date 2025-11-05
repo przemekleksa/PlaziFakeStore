@@ -7,7 +7,6 @@ interface LoginFormData {
   password: string;
 }
 
-
 interface FormErrors {
   email?: string;
   password?: string;
@@ -17,12 +16,12 @@ interface FormErrors {
 const LoginPage = () => {
   const { login, isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
-  
+
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
   });
-  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,7 +39,6 @@ const LoginPage = () => {
       newErrors.email = 'Email is invalid';
     }
 
-
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
@@ -51,14 +49,12 @@ const LoginPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
-    
 
     if (errors[name as keyof FormErrors]) {
       setErrors(prev => ({
@@ -68,10 +64,8 @@ const LoginPage = () => {
     }
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
 
     if (!validateForm()) {
       return;
@@ -82,7 +76,6 @@ const LoginPage = () => {
 
     try {
       await login(formData.email, formData.password);
-
     } catch (error: any) {
       setErrors({
         general: error.message || 'Login failed. Please try again.',
@@ -115,7 +108,10 @@ const LoginPage = () => {
           <div className="space-y-4">
             {/* Email field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Email address
               </label>
               <input
@@ -132,13 +128,18 @@ const LoginPage = () => {
                 placeholder="Enter your email"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {errors.email}
+                </p>
               )}
             </div>
 
             {/* Password field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Password
               </label>
               <input
@@ -155,7 +156,9 @@ const LoginPage = () => {
                 placeholder="Enter your password"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                  {errors.password}
+                </p>
               )}
             </div>
           </div>
@@ -179,10 +182,13 @@ const LoginPage = () => {
           </div>
 
           {/* Demo credentials info */}
-          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <p className="text-sm text-blue-800 dark:text-blue-200 font-medium">Demo credentials:</p>
-            <p className="text-sm text-blue-700 dark:text-blue-300">
-              Email: john@mail.com<br />
+          <div className="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
+            <p className="text-sm text-primary-800 dark:text-primary-200 font-medium">
+              Demo credentials:
+            </p>
+            <p className="text-sm text-primary-700 dark:text-primary-300">
+              Email: john@mail.com
+              <br />
               Password: changeme
             </p>
           </div>

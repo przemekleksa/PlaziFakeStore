@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Category } from '@/types';
 import { ProductsPageParams } from '@/hooks/useProductsLogic';
+import { toast } from 'react-toastify';
 
 interface CompactSearchFiltersProps {
   searchValue: string;
-  onSearchChange: (value: string) => void;
+  onSearchChange: (_value: string) => void;
   onClearSearch: () => void;
   filters: {
     priceMin: string;
@@ -14,7 +15,8 @@ interface CompactSearchFiltersProps {
     sortBy: string;
   };
   categories: Category[];
-  onFiltersChange: (filters: Partial<ProductsPageParams>) => void;
+  onFiltersChange: (_filters: Partial<ProductsPageParams>) => void;
+
   isAuthenticated: boolean;
   onLogout: () => void;
   user: any;
@@ -27,12 +29,22 @@ const CompactSearchFilters = ({
   filters,
   categories,
   onFiltersChange,
+
   isAuthenticated,
   onLogout,
   user,
 }: CompactSearchFiltersProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogoClick = () => {
+    try {
+      sessionStorage.removeItem('productFilters');
+      window.dispatchEvent(new Event('sessionStorageChange'));
+    } catch {
+      // Silently fail if sessionStorage is not available
+    }
+  };
 
   const handleFiltersToggle = () => {
     setFiltersOpen(!filtersOpen);
@@ -44,23 +56,48 @@ const CompactSearchFilters = ({
     if (filtersOpen) setFiltersOpen(false);
   };
 
-  const clearAllFilters = () => {
-    onFiltersChange({
-      priceMin: '',
-      priceMax: '',
-      category: '',
-      sortBy: '',
-    });
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onSearchChange(e.target.value);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
+  const handlePriceMinChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      onFiltersChange({ priceMin: value });
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue <= 0) {
+      toast.error('Cena musi być większa od 0');
+      return;
+    }
+
+    onFiltersChange({ priceMin: value });
+  };
+
+  const handlePriceMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      onFiltersChange({ priceMax: value });
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue <= 0) {
+      toast.error('Cena musi być większa od 0');
+      return;
+    }
+
+    onFiltersChange({ priceMax: value });
   };
 
   return (
     <div className="flex items-center gap-3">
       {/* Logo */}
-      <Link to="/" className="flex-shrink-0">
+      <Link to="/" className="flex-shrink-0" onClick={handleLogoClick}>
         <img
           src="/assets/images/platziStoreLogo.png"
           alt="Platzi Store"
@@ -244,16 +281,10 @@ const CompactSearchFilters = ({
       {/* Filters Dropdown */}
       {filtersOpen && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-40">
-          <div className="flex justify-between items-center mb-4">
+          <div className="mb-4">
             <h3 className="text-sm font-medium text-gray-900 dark:text-white">
               Filters
             </h3>
-            <button
-              onClick={clearAllFilters}
-              className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-            >
-              Clear All
-            </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
@@ -262,9 +293,10 @@ const CompactSearchFilters = ({
               </label>
               <input
                 type="number"
-                placeholder="0"
+                placeholder="1"
+                min="1"
                 value={filters.priceMin}
-                onChange={e => onFiltersChange({ priceMin: e.target.value })}
+                onChange={handlePriceMinChange}
                 className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
@@ -276,8 +308,9 @@ const CompactSearchFilters = ({
               <input
                 type="number"
                 placeholder="1000"
+                min="1"
                 value={filters.priceMax}
-                onChange={e => onFiltersChange({ priceMax: e.target.value })}
+                onChange={handlePriceMaxChange}
                 className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>

@@ -1,5 +1,7 @@
+import { ChangeEvent, KeyboardEvent } from 'react';
 import { Category } from '@/types';
 import { ProductsPageParams } from '@/hooks/useProductsLogic';
+import { toast } from 'react-toastify';
 
 interface ProductsFiltersProps {
   filters: {
@@ -9,7 +11,7 @@ interface ProductsFiltersProps {
     sortBy: string;
   };
   categories: Category[];
-  onFiltersChange: (filters: Partial<ProductsPageParams>) => void;
+  onFiltersChange: (_filters: Partial<ProductsPageParams>) => void;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -21,19 +23,45 @@ const ProductsFilters = ({
   isOpen,
   onToggle,
 }: ProductsFiltersProps) => {
-  const handlePriceMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFiltersChange({ priceMin: e.target.value });
+  const handlePriceMinChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      onFiltersChange({ priceMin: value });
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue <= 0) {
+      toast.error('Cena musi być większa od 0');
+      return;
+    }
+
+    onFiltersChange({ priceMin: value });
   };
 
-  const handlePriceMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFiltersChange({ priceMax: e.target.value });
+  const handlePriceMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      onFiltersChange({ priceMax: value });
+      return;
+    }
+
+    const numValue = Number(value);
+    if (isNaN(numValue) || numValue <= 0) {
+      toast.error('Cena musi być większa od 0');
+      return;
+    }
+
+    onFiltersChange({ priceMax: value });
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onFiltersChange({ category: e.target.value });
   };
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onFiltersChange({ sortBy: e.target.value });
   };
 
@@ -45,7 +73,7 @@ const ProductsFilters = ({
     onFiltersChange({ category: '' });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (['e', 'E', '+', '-'].includes(e.key)) {
       e.preventDefault();
     }
@@ -117,7 +145,7 @@ const ProductsFilters = ({
                 id="price-min"
                 type="number"
                 placeholder="Min"
-                min="0"
+                min="1"
                 value={filters.priceMin}
                 onChange={handlePriceMinChange}
                 onKeyDown={handleKeyDown}
@@ -134,7 +162,7 @@ const ProductsFilters = ({
                 id="price-max"
                 type="number"
                 placeholder="Max"
-                min="0"
+                min="1"
                 value={filters.priceMax}
                 onChange={handlePriceMaxChange}
                 onKeyDown={handleKeyDown}
@@ -145,9 +173,21 @@ const ProductsFilters = ({
                 <button
                   onClick={clearPriceFilters}
                   aria-label="Clear price filters"
-                  className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
+                  className="p-1 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded transition-colors"
                 >
-                  Clear
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
                 </button>
               )}
             </div>
@@ -180,9 +220,21 @@ const ProductsFilters = ({
                 <button
                   onClick={clearCategoryFilter}
                   aria-label="Clear category filter"
-                  className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 px-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
+                  className="p-1 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded transition-colors"
                 >
-                  Clear
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
                 </button>
               )}
             </div>

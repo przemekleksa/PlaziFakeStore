@@ -1,7 +1,7 @@
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (_page: number) => void;
   maxVisiblePages?: number;
 }
 
@@ -18,7 +18,7 @@ const Pagination = ({
 
     const half = Math.floor(maxVisiblePages / 2);
     let start = Math.max(1, currentPage - half);
-    let end = Math.min(totalPages, start + maxVisiblePages - 1);
+    const end = Math.min(totalPages, start + maxVisiblePages - 1);
 
     if (end - start + 1 < maxVisiblePages) {
       start = Math.max(1, end - maxVisiblePages + 1);
@@ -54,7 +54,7 @@ const Pagination = ({
             aria-current={page === currentPage ? 'page' : undefined}
             className={`px-3 py-1 border border-gray-300 dark:border-gray-600 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
               page === currentPage
-                ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600'
+                ? 'bg-primary-500 text-white border-blue-500 hover:bg-primary-600'
                 : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
