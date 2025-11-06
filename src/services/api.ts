@@ -53,8 +53,8 @@ apiClient.interceptors.request.use(
 
 let isRefreshing = false;
 let failedQueue: Array<{
-  resolve: (value?: any) => void;
-  reject: (error?: any) => void;
+  resolve: (_value?: any) => void;
+  reject: (_error?: any) => void;
 }> = [];
 
 const processQueue = (error: any, token: string | null = null) => {
