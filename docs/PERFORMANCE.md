@@ -27,7 +27,7 @@ This document outlines the performance optimizations implemented in the Platzi F
   - Mobile: 2.5s
 - **Largest Contentful Paint (LCP)**:
   - Desktop: 1.1s
-  - Mobile: 3.8s
+  - Mobile: 2.6s
 - **Total Blocking Time (TBT)**: 0ms
 - **Cumulative Layout Shift (CLS)**: 0
 
@@ -95,12 +95,6 @@ const Image = ({ src, alt, fallback, showPlaceholder = true }) => {
 ```
 
 ### 3. Bundle Optimization
-
-#### Removed Unused Code
-
-- **Slug functionality**: Removed unused slug-based routing (~100 lines)
-- **Unused imports**: Cleaned up all unused dependencies
-- **Dead code elimination**: Vite's tree shaking removes unused exports
 
 #### Vendor Splitting
 
